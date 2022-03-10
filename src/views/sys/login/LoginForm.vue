@@ -24,6 +24,23 @@
         :placeholder="t('sys.login.password')"
       />
     </FormItem>
+    <FormItem name="validateCode" class="enter-x">
+      <div class="flex">
+        <Input
+          size="large"
+          visibilityToggle
+          v-model:value="formData.validateCode"
+          placeholder="验证码"
+          autocomplete="off"
+        />
+        <img
+          title="点击切换验证码"
+          :src="validateCodeSrc"
+          alt=""
+          @click.stop="() => (validateCodeRandom = Math.random())"
+        />
+      </div>
+    </FormItem>
 
     <ARow class="enter-x">
       <ACol :span="12">
@@ -101,6 +118,8 @@
   import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
   import { useDesign } from '/@/hooks/web/useDesign';
   //import { onKeyStroke } from '@vueuse/core';
+  import { useGlobSetting } from '/@/hooks/setting';
+  const { apiUrl } = useGlobSetting();
 
   const ACol = Col;
   const ARow = Row;
@@ -119,9 +138,14 @@
   const rememberMe = ref(false);
 
   const formData = reactive({
-    account: 'vben',
-    password: '123456',
+    account: 'super',
+    password: 'zhyfyl1996',
+    validateCode: '',
   });
+  const validateCodeSrc = computed(
+    () => `${apiUrl}/captcha/captchaImage?type=math&s=${validateCodeRandom.value}`,
+  );
+  const validateCodeRandom = ref(Math.random());
 
   const { validForm } = useFormValid(formRef);
 
@@ -138,11 +162,13 @@
         password: data.password,
         username: data.account,
         mode: 'none', //不要默认的错误提示
+        validateCode: data.validateCode,
+        rememberMe: false,
       });
       if (userInfo) {
         notification.success({
           message: t('sys.login.loginSuccessTitle'),
-          description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.realName}`,
+          description: `${t('sys.login.loginSuccessDesc')}: ${data.account}`,
           duration: 3,
         });
       }

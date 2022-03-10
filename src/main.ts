@@ -14,7 +14,7 @@ import { setupStore } from '/@/store';
 import { setupGlobDirectives } from '/@/directives';
 import { setupI18n } from '/@/locales/setupI18n';
 import { registerGlobComp } from '/@/components/registerGlobComp';
-
+import { setupScmFrameHook } from './utils/scmFrame';
 async function bootstrap() {
   const app = createApp(App);
 
@@ -42,10 +42,11 @@ async function bootstrap() {
 
   // Configure global error handling
   setupErrorHandle(app);
+  // 当时有frame中台时注册事件
+  setupScmFrameHook();
 
   // https://next.router.vuejs.org/api/#isready
   // await router.isReady();
-
   app.mount('#app');
 }
 

@@ -7,15 +7,15 @@ import { PageEnum } from '/@/enums/pageEnum';
 import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum';
 import { getAuthCache, setAuthCache } from '/@/utils/auth';
 import { GetUserInfoModel, LoginParams } from '/@/api/sys/model/userModel';
-import { doLogout, getUserInfo, loginApi } from '/@/api/sys/user';
+import { doLogout, getUserInfo, loginApi, preLogin } from '/@/api/sys/user';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { router } from '/@/router';
 import { usePermissionStore } from '/@/store/modules/permission';
 import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
-import { isArray } from '/@/utils/is';
 import { h } from 'vue';
+import md5 from 'md5';
 
 interface UserState {
   userInfo: Nullable<UserInfo>;
@@ -23,6 +23,10 @@ interface UserState {
   roleList: RoleEnum[];
   sessionTimeout?: boolean;
   lastUpdateTime: number;
+  /**
+   * 是否已登录
+   */
+  logined: boolean;
 }
 
 export const useUserStore = defineStore({
@@ -38,6 +42,7 @@ export const useUserStore = defineStore({
     sessionTimeout: false,
     // Last fetch time
     lastUpdateTime: 0,
+    logined: false,
   }),
   getters: {
     getUserInfo(): UserInfo {
@@ -54,6 +59,9 @@ export const useUserStore = defineStore({
     },
     getLastUpdateTime(): number {
       return this.lastUpdateTime;
+    },
+    getLogined(): boolean {
+      return this.logined;
     },
   },
   actions: {
@@ -90,18 +98,28 @@ export const useUserStore = defineStore({
     ): Promise<GetUserInfoModel | null> {
       try {
         const { goHome = true, mode, ...loginParams } = params;
-        const data = await loginApi(loginParams, mode);
-        const { token } = data;
+        const { msg: salt } = await preLogin(params.username);
+        const { data } = await loginApi(
+          {
+            ...loginParams,
+            password: md5(loginParams.username + loginParams.password + salt),
+          },
+          mode,
+        );
+        // const { token } = data;
 
         // save token
-        this.setToken(token);
+        this.setToken(Math.random() + '');
+        this.setLogined(true);
+        this.setUserInfo(data);
+
         return this.afterLoginAction(goHome);
       } catch (error) {
         return Promise.reject(error);
       }
     },
     async afterLoginAction(goHome?: boolean): Promise<GetUserInfoModel | null> {
-      if (!this.getToken) return null;
+      if (!this.getLogined) return null;
       // get user info
       const userInfo = await this.getUserInfoAction();
 
@@ -123,30 +141,23 @@ export const useUserStore = defineStore({
       return userInfo;
     },
     async getUserInfoAction(): Promise<UserInfo | null> {
-      if (!this.getToken) return null;
-      const userInfo = await getUserInfo();
-      const { roles = [] } = userInfo;
-      if (isArray(roles)) {
-        const roleList = roles.map((item) => item.value) as RoleEnum[];
-        this.setRoleList(roleList);
-      } else {
-        userInfo.roles = [];
-        this.setRoleList([]);
-      }
-      this.setUserInfo(userInfo);
-      return userInfo;
+      if (!this.getLogined) return null;
+      const { data } = await getUserInfo();
+      this.setUserInfo(data);
+      return data;
     },
     /**
      * @description: logout
      */
     async logout(goLogin = false) {
-      if (this.getToken) {
+      if (this.getLogined) {
         try {
           await doLogout();
         } catch {
           console.log('注销Token失败');
         }
       }
+      this.setLogined(false);
       this.setToken(undefined);
       this.setSessionTimeout(false);
       this.setUserInfo(null);
@@ -167,6 +178,13 @@ export const useUserStore = defineStore({
           await this.logout(true);
         },
       });
+    },
+    /**
+     * 设置登录状态
+     * @param logined
+     */
+    setLogined(logined = false) {
+      this.logined = logined;
     },
   },
 });

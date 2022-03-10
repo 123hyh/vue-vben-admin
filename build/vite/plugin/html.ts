@@ -8,7 +8,7 @@ import pkg from '../../../package.json';
 import { GLOB_CONFIG_FILE_NAME } from '../../constant';
 
 export function configHtmlPlugin(env: ViteEnv, isBuild: boolean) {
-  const { VITE_GLOB_APP_TITLE, VITE_PUBLIC_PATH } = env;
+  const { VITE_GLOB_APP_TITLE, VITE_PUBLIC_PATH, VITE_GLOB_API_URL } = env;
 
   const path = VITE_PUBLIC_PATH.endsWith('/') ? VITE_PUBLIC_PATH : `${VITE_PUBLIC_PATH}/`;
 
@@ -22,6 +22,18 @@ export function configHtmlPlugin(env: ViteEnv, isBuild: boolean) {
       // Inject data into ejs template
       data: {
         title: VITE_GLOB_APP_TITLE,
+        injectScript: [
+          '/js/jquery.min.js?v=20210320',
+          '/js/bootstrap.min.js?v=20210320',
+          '/js/plugins/metisMenu/jquery.metisMenu.js?v=20210320',
+          '/js/plugins/slimscroll/jquery.slimscroll.min.js?v=20210320',
+          '/ajax/libs/blockUI/jquery.blockUI.js?v=20210320',
+          '/ajax/libs/layer/layer.min.js?v=20210320',
+          '/ruoyiLoc/js/ry-ui.js?v=20210320',
+          '/ruoyiLoc/js/common.js?v=20210320',
+          '/ruoyiLoc/index.js?v=20211211',
+          '/ajax/libs/fullscreen/jquery.fullscreen.js?v=20210320',
+        ].reduce((prev, uri) => (prev += `<script src="${VITE_GLOB_API_URL}${uri}"></script>`), ''),
       },
       // Embed the generated app.config.js file
       tags: isBuild

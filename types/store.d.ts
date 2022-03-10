@@ -38,6 +38,7 @@ export interface UserInfo {
   desc?: string;
   homePath?: string;
   roles: RoleInfo[];
+  menus?: Menu[];
 }
 
 export interface BeforeMiniState {
@@ -45,4 +46,13 @@ export interface BeforeMiniState {
   menuSplit?: boolean;
   menuMode?: MenuModeEnum;
   menuType?: MenuTypeEnum;
+}
+
+/**
+ * 菜单
+ */
+export interface Menu {
+  children: Menu[];
+  menuName: string;
+  menuType: string;
 }
