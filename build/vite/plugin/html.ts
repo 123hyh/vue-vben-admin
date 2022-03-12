@@ -29,6 +29,7 @@ export function configHtmlPlugin(env: ViteEnv, isBuild: boolean) {
           '/ruoyiLoc/js/ry-ui.js?v=20210320',
           '/ruoyiLoc/js/common.js?v=20210320',
           '/ruoyiLoc/index.js?v=20211211',
+          '/ajax/libs/fullscreen/jquery.fullscreen.js?v=20210320',
         ].reduce((prev, uri) => (prev += `<script src="${VITE_GLOB_API_URL}${uri}"></script>`), ''),
       },
       // Embed the generated app.config.js file

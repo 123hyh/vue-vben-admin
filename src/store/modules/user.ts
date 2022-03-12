@@ -24,7 +24,7 @@ import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 import { h } from 'vue';
 import md5 from 'md5';
-
+import { orgDeptTypeEnum } from '/@/enums/orgEnum';
 interface UserState {
   userInfo: Nullable<UserInfo>;
   token?: string;
@@ -37,7 +37,7 @@ interface UserState {
   orgList: {
     deptId: number;
     deptName: string;
-    deptType: string;
+    deptType: keyof typeof orgDeptTypeEnum;
     orgId: string;
     params: Record<any, any>;
     privacyGroupId: string;
@@ -79,7 +79,7 @@ export const useUserStore = defineStore({
       return this.userInfo?.orgId || getAuthCache<UserInfo>(USER_INFO_KEY)?.orgId;
     },
     getOrgList(): any[] {
-      return (this.orgList ?? []).map(({ orgId, deptName }) => ({ value: orgId, label: deptName }));
+      return this.orgList ?? [];
     },
   },
   actions: {

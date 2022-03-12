@@ -48,7 +48,7 @@ async function bootstrap() {
 
   // https://next.router.vuejs.org/api/#isready
   // await router.isReady();
-  app.mount('#app');
+  app.mount('#scmApp');
   // 加载 h5调试工具
   if (['test', 'dev', 'frameDev'].includes(MODE)) {
     import('vconsole').then((VConsole) => {

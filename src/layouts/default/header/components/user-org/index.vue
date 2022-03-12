@@ -9,7 +9,7 @@
         <Menu @click="changeOrg">
           <template v-for="item in options" :key="item.value">
             <MenuItem>
-              <a href="javascript:;">{{ item.label }}</a>
+              <a href="javascript:;">{{ item.deptName }}</a>
             </MenuItem>
           </template>
         </Menu>
@@ -23,7 +23,8 @@
   import { Dropdown, Menu, MenuItem } from 'ant-design-vue';
   import { DownOutlined } from '@ant-design/icons-vue';
   import { useUserStoreWithOut } from '/@/store/modules/user';
-  import { useLoading } from '/@/components/Loading';
+  import { useMessage } from '../../../../../hooks/web/useMessage';
+  import { orgDeptTypeEnum } from '../../../../../enums/orgEnum';
 
   export default defineComponent({
     name: 'UserOrg',
@@ -35,18 +36,25 @@
     },
 
     setup() {
-      const [openFullLoading] = useLoading({ tip: '加载中', absolute: true });
-
+      const { createMessage } = useMessage();
       const userStore = useUserStoreWithOut();
+
+      const getOrgName = computed(
+        () =>
+          options.find(
+            (item) => item.deptType === orgDeptTypeEnum.TYPE_GROUP || item.value === unref(value),
+          )?.deptName ?? '无组织',
+      );
+
       const value = ref(userStore.getOrgId);
       const options = userStore.getOrgList;
-      const getOrgName = computed(() => {
-        const [{ label } = {}] = options.filter((item) => item.value === unref(value));
-        return label ?? '';
-      });
+
       const changeOrg = async ({ key } = { key: '' }) => {
         value.value = key;
-        openFullLoading();
+        createMessage.loading({
+          content: '切换组织中，完成后将自动刷新',
+          duration: 2,
+        });
         await userStore.switchOrg(key);
         location.reload();
       };
