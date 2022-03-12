@@ -89,3 +89,17 @@ export const withInstall = <T>(component: T, alias?: string) => {
   };
   return component as T & Plugin;
 };
+
+/**
+ * 请求容错
+ */
+export async function useService<T>(request: () => Promise<T>) {
+  const result: [T | undefined, any] = [undefined, undefined];
+  try {
+    const data = await request();
+    result[0] = data;
+  } catch (error) {
+    result[1] = error;
+  }
+  return result;
+}

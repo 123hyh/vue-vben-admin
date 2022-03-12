@@ -17,6 +17,7 @@ import { registerGlobComp } from '/@/components/registerGlobComp';
 import { setupScmFrameHook } from './utils/scmFrame';
 async function bootstrap() {
   const app = createApp(App);
+  const { MODE } = import.meta.env;
 
   // Configure store
   setupStore(app);
@@ -48,6 +49,12 @@ async function bootstrap() {
   // https://next.router.vuejs.org/api/#isready
   // await router.isReady();
   app.mount('#app');
+  // 加载 h5调试工具
+  if (['test', 'dev', 'frameDev'].includes(MODE)) {
+    import('vconsole').then((VConsole) => {
+      new VConsole.default();
+    });
+  }
 }
 
 bootstrap();

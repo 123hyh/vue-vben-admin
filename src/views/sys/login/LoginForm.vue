@@ -25,21 +25,22 @@
       />
     </FormItem>
     <FormItem name="validateCode" class="enter-x">
-      <div class="flex">
-        <Input
-          size="large"
-          visibilityToggle
-          v-model:value="formData.validateCode"
-          placeholder="验证码"
-          autocomplete="off"
-        />
-        <img
-          title="点击切换验证码"
-          :src="validateCodeSrc"
-          alt=""
-          @click.stop="() => (validateCodeRandom = Math.random())"
-        />
-      </div>
+      <Input
+        size="large"
+        visibilityToggle
+        v-model:value="formData.validateCode"
+        placeholder="验证码"
+        autocomplete="off"
+        class="validate-code-wrap"
+      >
+        <template #addonAfter>
+          <img
+            title="点击切换验证码"
+            :src="validateCodeSrc"
+            alt=""
+            @click.stop="() => (validateCodeRandom = Math.random())"
+        /></template>
+      </Input>
     </FormItem>
 
     <ARow class="enter-x">
@@ -60,7 +61,6 @@
         </FormItem>
       </ACol>
     </ARow>
-
     <FormItem class="enter-x">
       <Button type="primary" size="large" block @click="handleLogin" :loading="loading">
         {{ t('sys.login.loginButton') }}
@@ -69,33 +69,34 @@
         {{ t('sys.login.registerButton') }}
       </Button> -->
     </FormItem>
-    <ARow class="enter-x">
-      <ACol :md="8" :xs="24">
-        <Button block @click="setLoginState(LoginStateEnum.MOBILE)">
-          {{ t('sys.login.mobileSignInFormTitle') }}
-        </Button>
-      </ACol>
-      <ACol :md="8" :xs="24" class="!my-2 !md:my-0 xs:mx-0 md:mx-2">
-        <Button block @click="setLoginState(LoginStateEnum.QR_CODE)">
-          {{ t('sys.login.qrSignInFormTitle') }}
-        </Button>
-      </ACol>
-      <ACol :md="7" :xs="24">
-        <Button block @click="setLoginState(LoginStateEnum.REGISTER)">
-          {{ t('sys.login.registerButton') }}
-        </Button>
-      </ACol>
-    </ARow>
+    <template v-if="false">
+      <ARow class="enter-x">
+        <ACol :md="8" :xs="24">
+          <Button block @click="setLoginState(LoginStateEnum.MOBILE)">
+            {{ t('sys.login.mobileSignInFormTitle') }}
+          </Button>
+        </ACol>
+        <ACol :md="8" :xs="24" class="!my-2 !md:my-0 xs:mx-0 md:mx-2">
+          <Button block @click="setLoginState(LoginStateEnum.QR_CODE)">
+            {{ t('sys.login.qrSignInFormTitle') }}
+          </Button>
+        </ACol>
+        <ACol :md="7" :xs="24">
+          <Button block @click="setLoginState(LoginStateEnum.REGISTER)">
+            {{ t('sys.login.registerButton') }}
+          </Button>
+        </ACol>
+      </ARow>
 
-    <Divider class="enter-x">{{ t('sys.login.otherSignIn') }}</Divider>
-
-    <div class="flex justify-evenly enter-x" :class="`${prefixCls}-sign-in-way`">
-      <GithubFilled />
-      <WechatFilled />
-      <AlipayCircleFilled />
-      <GoogleCircleFilled />
-      <TwitterCircleFilled />
-    </div>
+      <Divider class="enter-x">{{ t('sys.login.otherSignIn') }}</Divider>
+      <div class="flex justify-evenly enter-x" :class="`${prefixCls}-sign-in-way`">
+        <GithubFilled />
+        <WechatFilled />
+        <AlipayCircleFilled />
+        <GoogleCircleFilled />
+        <TwitterCircleFilled />
+      </div>
+    </template>
   </Form>
 </template>
 <script lang="ts" setup>
@@ -143,7 +144,7 @@
     validateCode: '',
   });
   const validateCodeSrc = computed(
-    () => `${apiUrl}/captcha/captchaImage?type=math&s=${validateCodeRandom.value}`,
+    () => `${apiUrl}/captcha/captchaImage?type=math&s=${unref(validateCodeRandom)}`,
   );
   const validateCodeRandom = ref(Math.random());
 
@@ -183,3 +184,26 @@
     }
   }
 </script>
+
+<style lang="less" scoped>
+  :deep(.validate-code-wrap) {
+    & > .ant-input-wrapper {
+      @apply flex !important;
+
+      #form_item_validateCode {
+        flex: 6;
+        min-width: initial;
+      }
+
+      > .ant-input-group-addon {
+        flex-grow: 1;
+        padding: 0;
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
+</style>

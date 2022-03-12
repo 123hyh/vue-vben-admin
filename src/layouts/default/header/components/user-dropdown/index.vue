@@ -12,9 +12,9 @@
     <template #overlay>
       <Menu @click="handleMenuClick">
         <MenuItem
-          key="doc"
-          :text="t('layout.header.dropdownItemDoc')"
-          icon="ion:document-text-outline"
+          key="personCenter"
+          text="个人中心"
+          icon="ion:accessibility-outline"
           v-if="getShowDoc"
         />
         <MenuDivider v-if="getShowDoc" />
@@ -40,8 +40,6 @@
 
   import { defineComponent, computed } from 'vue';
 
-  import { DOC_URL } from '/@/settings/siteSetting';
-
   import { useUserStore } from '/@/store/modules/user';
   import { useHeaderSetting } from '/@/hooks/setting/useHeaderSetting';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -50,11 +48,12 @@
 
   import headerImg from '/@/assets/images/header.jpg';
   import { propTypes } from '/@/utils/propTypes';
-  import { openWindow } from '/@/utils';
 
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
 
-  type MenuEvent = 'logout' | 'doc' | 'lock';
+  import { useRouter } from 'vue-router';
+
+  type MenuEvent = 'logout' | 'personCenter' | 'lock';
 
   export default defineComponent({
     name: 'UserDropdown',
@@ -81,6 +80,7 @@
 
       const [register, { openModal }] = useModal();
 
+      const { push: routerPush } = useRouter();
       function handleLock() {
         openModal(true);
       }
@@ -90,9 +90,9 @@
         userStore.confirmLoginOut();
       }
 
-      // open doc
-      function openDoc() {
-        openWindow(DOC_URL);
+      // 打开个人中心
+      function openPersonCenter() {
+        routerPush(`/system/user/profile`);
       }
 
       function handleMenuClick(e: { key: MenuEvent }) {
@@ -100,8 +100,8 @@
           case 'logout':
             handleLoginOut();
             break;
-          case 'doc':
-            openDoc();
+          case 'personCenter':
+            openPersonCenter();
             break;
           case 'lock':
             handleLock();

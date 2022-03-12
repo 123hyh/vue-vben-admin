@@ -9,6 +9,9 @@ enum Api {
   Logout = '/logout',
   GetUserInfo = '/system/user/detail',
   GetPermCode = '/getPermCode',
+  IsLogin = '/system/user/isLogin',
+  SwitchOrg = '/system/switchOrg',
+  getUserOrgList = '/system/user/getUserOrgList',
 }
 /**
  *
@@ -55,3 +58,34 @@ export function getPermCode() {
 export function doLogout() {
   return defHttp.get({ url: Api.Logout });
 }
+
+/**
+ * 判断是否登录
+ * @returns
+ */
+export const isLogin = () => defHttp.post({ url: Api.IsLogin });
+
+/**
+ * 切换组织
+ * @param orgId 组织id
+ * @returns
+ */
+export const switchOrg = (orgId: string) =>
+  defHttp.post({
+    url: Api.SwitchOrg,
+    data: {
+      orgId,
+    },
+    headers: {
+      'Content-Type': ContentTypeEnum.FORM_URLENCODED,
+    },
+  });
+
+/**
+ * 获取当前用户所拥有的 组织
+ * @returns
+ */
+export const getUserOrgList = () =>
+  defHttp.get({
+    url: Api.getUserOrgList,
+  });

@@ -1,15 +1,31 @@
 import { defHttp } from '/@/utils/http/axios';
 import { useGlobSetting } from '/@/hooks/setting';
+import { isNullOrUnDef } from '/@/utils/is';
+import { capitalize } from 'vue';
 const globSetting = useGlobSetting();
-
-let menuNameIndex = 0;
+/**
+ * 校验是否远程地址
+ * @param path
+ * @returns
+ */
+function isNetWorkUrl(url: string) {
+  return /^((https?):\/\/)?([^!@#$%^&*?.\s-]([^!@#$%^&*?.\s]{0,63}[^!@#$%^&*?.\s])?\.)+[a-z]{2,6}\/?/.test(
+    url,
+  );
+}
+const getMenName = (() => {
+  let menuIndex = 0;
+  return (lavel: number) => `template.lavel.${lavel}.${menuIndex++}`;
+})();
 /**
  * 遍历处理菜单
  * @param menuList
  * @param tierNum
  * @returns
  */
+
 export const forMenu = (menuList) => {
+  const checkNotPath = (path) => /^#/.test(path);
   const menus = [];
   /**
    * 获取重定向地址
@@ -26,28 +42,40 @@ export const forMenu = (menuList) => {
   };
   const handle = (menuItem: any, tierNum: number) => {
     const { menuType, menuName, url, children = [] } = menuItem;
-    if (['菜单管理'].includes(menuName)) {
-    }
     /**
      * menuType = M 为目录
      */
     if (menuType === 'M') {
-      const _c = children.map((item) => handle(item, tierNum + 1)),
-        redirect = getRedirectPath(children),
-        name = redirect.split('/')[tierNum],
-        path = `/${name}`,
-        meta = { icon: 'carbon:user-role', title: menuName };
+      if (['结算管理'].includes(menuName.trim())) {
+      }
+      const _c = children.map((item) => handle(item, tierNum + 1));
+      const redirect = getRedirectPath(children);
+      const _curName = redirect.split('/')[tierNum];
+      const name = isNullOrUnDef(_curName) ? getMenName(tierNum) : _curName;
+      const path = encodeURIComponent(name);
+      const meta = { icon: 'carbon:user-role', title: menuName };
       if (tierNum === 1 && children.length > 0) {
-        return { path, name, redirect, meta, children: _c, component: 'LAYOUT' };
+        return {
+          path: checkNotPath(url) ? '/' + path : url,
+          name,
+          redirect,
+          meta,
+          children: _c,
+          component: 'LAYOUT',
+        };
       } else {
-        return { path, name, redirect, meta, children: _c, component: 'LAYOUT' };
+        return { path: checkNotPath(url) ? path : url, name, /*redirect,*/ meta, children: _c };
       }
     } else {
-      const _u = url.split('/');
+      const _u = url.split('/').filter((item) => item !== '' && !isNullOrUnDef(item));
+      const currentPath = _u.map((item, i) => (i == 0 ? item : capitalize(item))).join('');
       // 避免重复，取层级的
-      const name = `${_u.at(-1)}_${menuNameIndex++}`;
-      const path = _u.at(-1);
-      const meta = { title: menuName, frameSrc: globSetting.apiUrl + url };
+      const name = _u.join('.');
+
+      // 存在重复路由不嵌套处理
+      const path = isNetWorkUrl(url) ? url : encodeURIComponent(currentPath);
+      const has = url.startsWith('/');
+      const meta = { title: menuName, frameSrc: globSetting.apiUrl + (has ? url : `/${url}`) };
       return { path, name, meta };
     }
   };
@@ -55,7 +83,6 @@ export const forMenu = (menuList) => {
   for (const menItem of menuList) {
     menus.push(handle(menItem, 1));
   }
-
   return menus;
 };
 

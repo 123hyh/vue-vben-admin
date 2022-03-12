@@ -9,6 +9,7 @@
   "scripts": {
     "bootstrap": "pnpm install",
     "serve": "npm run dev",
+    "dev:frame": "vite --mode frameDev",
     "dev": "vite",
     "build": "cross-env NODE_ENV=production vite build && esno ./build/script/postBuild.ts",
     "build:test": "cross-env vite build --mode test && esno ./build/script/postBuild.ts",
@@ -133,6 +134,7 @@
     "ts-jest": "^27.1.3",
     "ts-node": "^10.5.0",
     "typescript": "^4.5.5",
+    "vconsole": "^3.12.1",
     "vite": "^2.8.4",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-html": "^3.1.0",

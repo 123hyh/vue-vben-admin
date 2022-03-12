@@ -27,7 +27,14 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
   // The boolean type read by loadEnv is a string. This function can be converted to boolean type
   const viteEnv = wrapperEnv(env);
 
-  const { VITE_PORT, VITE_PUBLIC_PATH, VITE_PROXY, VITE_DROP_CONSOLE } = viteEnv;
+  const {
+    VITE_PORT,
+    VITE_PUBLIC_PATH,
+    VITE_PROXY,
+    VITE_DROP_CONSOLE,
+    VITE_USE_FRAME,
+    VITE_FRAME_NGINX_PORT,
+  } = viteEnv;
 
   const isBuild = command === 'build';
 
@@ -59,9 +66,12 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       port: VITE_PORT,
       // Load proxy configuration from .env
       proxy: createProxy(VITE_PROXY),
-      hmr: {
-        port: 8093,
-      },
+      // frame 模式 需要与 nginx 的端口一致，避免无限刷新
+      hmr: VITE_USE_FRAME
+        ? {
+            port: VITE_FRAME_NGINX_PORT,
+          }
+        : {},
     },
     esbuild: {
       pure: VITE_DROP_CONSOLE ? ['console.log', 'debugger'] : [],

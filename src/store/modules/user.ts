@@ -7,7 +7,15 @@ import { PageEnum } from '/@/enums/pageEnum';
 import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum';
 import { getAuthCache, setAuthCache } from '/@/utils/auth';
 import { GetUserInfoModel, LoginParams } from '/@/api/sys/model/userModel';
-import { doLogout, getUserInfo, loginApi, preLogin } from '/@/api/sys/user';
+import {
+  doLogout,
+  getUserInfo,
+  getUserOrgList,
+  isLogin,
+  loginApi,
+  preLogin,
+  switchOrg,
+} from '/@/api/sys/user';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { router } from '/@/router';
@@ -24,9 +32,16 @@ interface UserState {
   sessionTimeout?: boolean;
   lastUpdateTime: number;
   /**
-   * 是否已登录
+   * 当前用户拥有的 组织集合
    */
-  logined: boolean;
+  orgList: {
+    deptId: number;
+    deptName: string;
+    deptType: string;
+    orgId: string;
+    params: Record<any, any>;
+    privacyGroupId: string;
+  }[];
 }
 
 export const useUserStore = defineStore({
@@ -42,7 +57,7 @@ export const useUserStore = defineStore({
     sessionTimeout: false,
     // Last fetch time
     lastUpdateTime: 0,
-    logined: false,
+    orgList: [] as UserState['orgList'],
   }),
   getters: {
     getUserInfo(): UserInfo {
@@ -60,8 +75,11 @@ export const useUserStore = defineStore({
     getLastUpdateTime(): number {
       return this.lastUpdateTime;
     },
-    getLogined(): boolean {
-      return this.logined;
+    getOrgId(): string {
+      return this.userInfo?.orgId || getAuthCache<UserInfo>(USER_INFO_KEY)?.orgId;
+    },
+    getOrgList(): any[] {
+      return (this.orgList ?? []).map(({ orgId, deptName }) => ({ value: orgId, label: deptName }));
     },
   },
   actions: {
@@ -110,7 +128,6 @@ export const useUserStore = defineStore({
 
         // save token
         this.setToken(Math.random() + '');
-        this.setLogined(true);
         this.setUserInfo(data);
 
         return this.afterLoginAction(goHome);
@@ -119,7 +136,7 @@ export const useUserStore = defineStore({
       }
     },
     async afterLoginAction(goHome?: boolean): Promise<GetUserInfoModel | null> {
-      if (!this.getLogined) return null;
+      if (!this.getToken) return null;
       // get user info
       const userInfo = await this.getUserInfoAction();
 
@@ -141,23 +158,29 @@ export const useUserStore = defineStore({
       return userInfo;
     },
     async getUserInfoAction(): Promise<UserInfo | null> {
-      if (!this.getLogined) return null;
-      const { data } = await getUserInfo();
-      this.setUserInfo(data);
-      return data;
+      if (!this.getToken) return null;
+      const [userRes, orgRes] = await Promise.allSettled([getUserInfo(), getUserOrgList()]);
+      if (userRes.status === 'fulfilled') {
+        this.setUserInfo(userRes.value.data);
+      }
+      if (orgRes.status === 'fulfilled') {
+        const value = orgRes.value.data as UserState['orgList'];
+        this.setOrgList(value);
+      }
+
+      return userRes.status === 'fulfilled' ? userRes.value.data : null;
     },
     /**
      * @description: logout
      */
     async logout(goLogin = false) {
-      if (this.getLogined) {
+      if (this.getToken) {
         try {
           await doLogout();
         } catch {
           console.log('注销Token失败');
         }
       }
-      this.setLogined(false);
       this.setToken(undefined);
       this.setSessionTimeout(false);
       this.setUserInfo(null);
@@ -179,12 +202,21 @@ export const useUserStore = defineStore({
         },
       });
     },
+
     /**
-     * 设置登录状态
-     * @param logined
+     * 判断是否登录
      */
-    setLogined(logined = false) {
-      this.logined = logined;
+    async isLogin() {
+      await isLogin();
+    },
+    /**
+     * 切换组织
+     */
+    async switchOrg(orgId) {
+      return await switchOrg(orgId);
+    },
+    setOrgList(v: UserState['orgList']) {
+      this.orgList = v;
     },
   },
 });

@@ -39,6 +39,7 @@ export interface UserInfo {
   homePath?: string;
   roles: RoleInfo[];
   menus?: Menu[];
+  orgId: string;
 }
 
 export interface BeforeMiniState {

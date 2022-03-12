@@ -72,6 +72,8 @@ declare global {
     VITE_USE_IMAGEMIN: boolean;
     VITE_GENERATE_UI: string;
     VITE_GLOB_API_URL?: string;
+    VITE_USE_FRAME?: boolean;
+    VITE_FRAME_NGINX_PORT?: number;
   }
 
   declare function parseInt(s: string | number, radix?: number): number;
