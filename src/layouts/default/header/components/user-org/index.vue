@@ -24,7 +24,6 @@
   import { DownOutlined } from '@ant-design/icons-vue';
   import { useUserStoreWithOut } from '/@/store/modules/user';
   import { useMessage } from '../../../../../hooks/web/useMessage';
-  import { orgDeptTypeEnum } from '../../../../../enums/orgEnum';
 
   export default defineComponent({
     name: 'UserOrg',
@@ -38,16 +37,15 @@
     setup() {
       const { createMessage } = useMessage();
       const userStore = useUserStoreWithOut();
-
-      const getOrgName = computed(
-        () =>
-          options.find(
-            (item) => item.deptType === orgDeptTypeEnum.TYPE_GROUP || item.value === unref(value),
-          )?.deptName ?? '无组织',
-      );
-
       const value = ref(userStore.getOrgId);
       const options = userStore.getOrgList;
+      const getOrgName = computed(() => {
+        return (
+          options.find((item) => {
+            return item.orgId === unref(value);
+          })?.deptName ?? '无组织'
+        );
+      });
 
       const changeOrg = async ({ key } = { key: '' }) => {
         value.value = key;

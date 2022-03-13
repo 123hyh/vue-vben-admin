@@ -40,20 +40,20 @@ export const forMenu = (menuList) => {
       return firstItem.url;
     }
   };
-  const handle = (menuItem: any, tierNum: number) => {
+  const handle = (menuItem: any, tierNum: number, prefixName = '') => {
     const { menuType, menuName, url, children = [] } = menuItem;
     /**
      * menuType = M 为目录
      */
     if (menuType === 'M') {
-      if (['结算管理'].includes(menuName.trim())) {
-      }
-      const _c = children.map((item) => handle(item, tierNum + 1));
+      const _c = children.map((item) => handle(item, tierNum + 1, `${prefixName}.${url}`));
       const redirect = getRedirectPath(children);
       const _curName = redirect.split('/')[tierNum];
       const name = isNullOrUnDef(_curName) ? getMenName(tierNum) : _curName;
       const path = encodeURIComponent(name);
       const meta = { icon: 'carbon:user-role', title: menuName };
+      if (['供应链管理'].includes(menuName.trim())) {
+      }
       if (tierNum === 1 && children.length > 0) {
         return {
           path: checkNotPath(url) ? '/' + path : url,
@@ -64,7 +64,12 @@ export const forMenu = (menuList) => {
           component: 'LAYOUT',
         };
       } else {
-        return { path: checkNotPath(url) ? path : url, name, /*redirect,*/ meta, children: _c };
+        return {
+          path: url,
+          name: `${prefixName}.${url}`,
+          meta,
+          children: _c,
+        };
       }
     } else {
       const _u = url.split('/').filter((item) => item !== '' && !isNullOrUnDef(item));
@@ -76,13 +81,15 @@ export const forMenu = (menuList) => {
       const path = isNetWorkUrl(url) ? url : encodeURIComponent(currentPath);
       const has = url.startsWith('/');
       const meta = { title: menuName, frameSrc: globSetting.apiUrl + (has ? url : `/${url}`) };
-      return { path, name, meta };
+
+      return { path, name: `${prefixName}.${name}`, meta };
     }
   };
 
   for (const menItem of menuList) {
     menus.push(handle(menItem, 1));
   }
+  debugger;
   return menus;
 };
 

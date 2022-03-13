@@ -24,6 +24,7 @@ import { getPermCode } from '/@/api/sys/user';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { PageEnum } from '/@/enums/pageEnum';
 
+import dashboard from '/@/router/routes/modules/dashboard';
 interface PermissionState {
   // Permission code list
   permCodeList: string[] | number[];
@@ -203,7 +204,7 @@ export const usePermissionStore = defineStore({
           routeList = routeList.filter(routeRemoveIgnoreFilter);
 
           routeList = flatMultiLevelRoutes(routeList);
-          routes = [PAGE_NOT_FOUND_ROUTE, ...routeList];
+          routes = [PAGE_NOT_FOUND_ROUTE, dashboard, ...routeList];
           break;
       }
 

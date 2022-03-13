@@ -20,7 +20,8 @@ const dashboard: AppRouteModule = {
       component: () => import('/@/views/dashboard/analysis/index.vue'),
       meta: {
         // affix: true,
-        title: t('routes.dashboard.analysis'),
+        // title: t('routes.dashboard.analysis'),
+        title: '首页',
       },
     },
     {
