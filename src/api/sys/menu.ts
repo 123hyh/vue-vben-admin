@@ -69,7 +69,6 @@ export const forMenu = (menuList) => {
         component: 'LAYOUT',
       };
     } else {
-      debugger;
       const _u = url.split('/').filter((item) => item !== '' && !isNullOrUnDef(item));
       const currentPath = _u.map((item, i) => (i == 0 ? item : capitalize(item))).join('');
 

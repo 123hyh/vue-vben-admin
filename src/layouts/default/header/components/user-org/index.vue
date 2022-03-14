@@ -22,7 +22,7 @@
   import { DownOutlined } from '@ant-design/icons-vue';
   import { useUserStoreWithOut } from '/@/store/modules/user';
   import { useMessage } from '../../../../../hooks/web/useMessage';
-
+  import { orgDeptTypeEnum } from '../../../../../enums/orgEnum';
   export default defineComponent({
     name: 'UserOrg',
     components: {
@@ -40,7 +40,12 @@
       const getOrgName = computed(() => {
         return (
           options.find((item) => {
-            return item.orgId === unref(value);
+            const _v = unref(value);
+            return (
+              (orgDeptTypeEnum.TYPE_GROUP === item.deptType &&
+                [`${item.deptId}`, `${item.orgId}`].includes(_v)) ||
+              item.orgId === unref(value)
+            );
           })?.deptName ?? '无组织'
         );
       });
