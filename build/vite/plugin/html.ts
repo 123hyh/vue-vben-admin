@@ -25,6 +25,7 @@ export function configHtmlPlugin(env: ViteEnv, isBuild: boolean) {
         injectScript: [
           '/js/jquery.min.js?v=20210320',
           '/js/bootstrap.min.js?v=20210320',
+          '/ajax/libs/blockUI/jquery.blockUI.js?v=20210320',
           '/ajax/libs/layer/layer.min.js?v=20210320',
           '/ruoyiLoc/js/ry-ui.js?v=20210320',
           '/ruoyiLoc/js/common.js?v=20210320',

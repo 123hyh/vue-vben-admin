@@ -11,7 +11,8 @@ enum Api {
   GetPermCode = '/getPermCode',
   IsLogin = '/system/user/isLogin',
   SwitchOrg = '/system/switchOrg',
-  getUserOrgList = '/system/user/getUserOrgList',
+  GetUserOrgList = '/system/user/getUserOrgList',
+  GetQuickMenus = '/system/user/quickMenus',
 }
 /**
  *
@@ -87,5 +88,14 @@ export const switchOrg = (orgId: string) =>
  */
 export const getUserOrgList = () =>
   defHttp.get({
-    url: Api.getUserOrgList,
+    url: Api.GetUserOrgList,
+  });
+
+/**
+ * 获取用户快捷菜单
+ * @returns
+ */
+export const getQuickMenus = () =>
+  defHttp.get({
+    url: Api.GetQuickMenus,
   });

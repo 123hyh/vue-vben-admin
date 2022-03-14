@@ -16,12 +16,27 @@ function isNetWorkUrl(url: string) {
 }
 
 /**
+ * 图标集合
+ */
+const menuIconMap = {
+  系统管理: 'ri:settings-3-fill',
+  系统监控: 'ph:video-camera-fill',
+  运输管理: 'mdi:van-utility',
+  仓储管理: 'ic:outline-warehouse',
+  费用管理: 'ant-design:money-collect-filled',
+  风控管理: 'wpf:security-checked',
+  系统工具: 'ant-design:tool-filled',
+  供应链管理: 'carbon:chart-relationship',
+  公司管理: 'ic:baseline-format-align-right',
+  关务管理: 'gridicons:customize',
+};
+
+/**
  * 遍历处理菜单
  * @param menuList
  * @param tierNum
  * @returns
  */
-
 export const forMenu = (menuList) => {
   const menus = [] as ReturnType<typeof handle>[];
 
@@ -56,7 +71,13 @@ export const forMenu = (menuList) => {
       const _c = children.map((item) => handle(item, tierNum + 1, currentPaths));
       const redirectPaths = makeRedirectPaths(_c, currentPaths);
       const join = (separator: string) => redirectPaths.join(separator);
-      const meta = { icon: 'carbon:user-role', title: menuName };
+      const meta = {
+        icon: '',
+        title: menuName,
+      };
+      if (menuIconMap[menuName]) {
+        meta.icon = menuIconMap[menuName];
+      }
       const name = join('.');
       const redirect = join('/');
 

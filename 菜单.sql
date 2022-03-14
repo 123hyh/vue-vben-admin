@@ -150,6 +150,29 @@ SET t1.url = 'outbound'
 WHERE
 	t1.menu_name = '出库管理' 
 	AND t2.menu_name = '仓储管理';
+
+	
+UPDATE sys_menu t1
+JOIN sys_menu t2 ON t2.menu_id = t1.parent_id 
+SET t1.url = 'inventory' 
+WHERE
+	t1.menu_name = '库存管理' 
+	AND t2.menu_name = '仓储管理';
+	
+UPDATE sys_menu t1
+JOIN sys_menu t2 ON t2.menu_id = t1.parent_id 
+SET t1.url = 'query' 
+WHERE
+	t1.menu_name = '库存查询' 
+	AND t2.menu_name = '库存管理';
+	
+	UPDATE sys_menu t1
+JOIN sys_menu t2 ON t2.menu_id = t1.parent_id 
+SET t1.url = 'picking' 
+WHERE
+	t1.menu_name = '库存拣货' 
+	AND t2.menu_name = '库存管理';
+	
 	
 SELECT * from sys_menu WHERE menu_name = '运输管理';
 

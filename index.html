@@ -42,6 +42,13 @@
           background-color: #f4f7f9;
         }
 
+        @media (max-width: 575.9px) {
+          .font_size_1-6rem {
+            font-size: 1.6rem !important;
+            line-height: 1.6rem !important;
+          }
+        }
+
         .app-loading .app-loading-wrap {
           position: absolute;
           top: 50%;
@@ -150,7 +157,7 @@
           <div class="app-loading-dots">
             <span class="dot dot-spin"><i></i><i></i><i></i><i></i></span>
           </div>
-          <div class="app-loading-title"><%= title %></div>
+          <div class="app-loading-title font_size_1-6rem"><%= title %></div>
         </div>
       </div>
     </div>
