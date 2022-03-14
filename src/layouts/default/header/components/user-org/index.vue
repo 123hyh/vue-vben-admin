@@ -1,21 +1,19 @@
 <template>
-  <div>
-    <Dropdown>
-      <a class="ant-dropdown-link" @click.prevent>
-        {{ getOrgName }}
-        <DownOutlined />
-      </a>
-      <template #overlay>
-        <Menu @click="changeOrg">
-          <template v-for="item in options" :key="item.value">
-            <MenuItem>
-              <a href="javascript:;">{{ item.deptName }}</a>
-            </MenuItem>
-          </template>
-        </Menu>
-      </template>
-    </Dropdown>
-  </div>
+  <Dropdown>
+    <a class="ant-dropdown-link" @click.prevent>
+      {{ getOrgName }}
+      <DownOutlined />
+    </a>
+    <template #overlay>
+      <Menu @click="changeOrg">
+        <template v-for="item in options" :key="item.orgId">
+          <MenuItem>
+            <a href="javascript:;">{{ item.deptName }}</a>
+          </MenuItem>
+        </template>
+      </Menu>
+    </template>
+  </Dropdown>
 </template>
 
 <script lang="ts">

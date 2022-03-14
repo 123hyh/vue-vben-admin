@@ -3,6 +3,7 @@ import { useGlobSetting } from '/@/hooks/setting';
 import { isNullOrUnDef } from '/@/utils/is';
 import { capitalize } from 'vue';
 const globSetting = useGlobSetting();
+
 /**
  * 校验是否远程地址
  * @param path
@@ -13,10 +14,7 @@ function isNetWorkUrl(url: string) {
     url,
   );
 }
-const getMenName = (() => {
-  let menuIndex = 0;
-  return (lavel: number) => `template.lavel.${lavel}.${menuIndex++}`;
-})();
+
 /**
  * 遍历处理菜单
  * @param menuList
@@ -25,55 +23,56 @@ const getMenName = (() => {
  */
 
 export const forMenu = (menuList) => {
-  const checkNotPath = (path) => /^#/.test(path);
-  const menus = [];
+  const menus = [] as ReturnType<typeof handle>[];
+
   /**
-   * 获取重定向地址
+   * 构造重定向地址
    * @param children
    * @returns
    */
-  const getRedirectPath = (children: any[]) => {
-    const firstItem = children[0];
-    if (firstItem.children[0]) {
-      return getRedirectPath(firstItem.children);
-    } else {
-      return firstItem.url;
+  const makeRedirectPaths = (children: any[], prefixPaths: string[]) => {
+    function _handle(children: any[], paths: string[]): string[] {
+      const { path, children: _c } = children[0];
+      paths.push(path);
+      if (Array.isArray(_c) && _c[0]) {
+        return _handle(_c, paths);
+      } else {
+        return paths;
+      }
     }
+    return _handle(children, [...prefixPaths]);
   };
-  const handle = (menuItem: any, tierNum: number, prefixName = '') => {
+
+  function handle(menuItem: any, tierNum: number, prefixPaths = [] as string[]) {
     const { menuType, menuName, url, children = [] } = menuItem;
+
+    // 当前路由的路径集合
+    const currentPaths = [...prefixPaths, url];
+
     /**
      * menuType = M 为目录
      */
     if (menuType === 'M') {
-      const _c = children.map((item) => handle(item, tierNum + 1, `${prefixName}.${url}`));
-      const redirect = getRedirectPath(children);
-      const _curName = redirect.split('/')[tierNum];
-      const name = isNullOrUnDef(_curName) ? getMenName(tierNum) : _curName;
-      const path = encodeURIComponent(name);
+      const _c = children.map((item) => handle(item, tierNum + 1, currentPaths));
+      const redirectPaths = makeRedirectPaths(_c, currentPaths);
+      const join = (separator: string) => redirectPaths.join(separator);
       const meta = { icon: 'carbon:user-role', title: menuName };
-      if (['供应链管理'].includes(menuName.trim())) {
-      }
-      if (tierNum === 1 && children.length > 0) {
-        return {
-          path: checkNotPath(url) ? '/' + path : url,
-          name,
-          redirect,
-          meta,
-          children: _c,
-          component: 'LAYOUT',
-        };
-      } else {
-        return {
-          path: url,
-          name: `${prefixName}.${url}`,
-          meta,
-          children: _c,
-        };
-      }
+      const name = join('.');
+      const redirect = join('/');
+
+      return {
+        path: url,
+        name,
+        redirect,
+        meta,
+        children: _c,
+        component: 'LAYOUT',
+      };
     } else {
+      debugger;
       const _u = url.split('/').filter((item) => item !== '' && !isNullOrUnDef(item));
       const currentPath = _u.map((item, i) => (i == 0 ? item : capitalize(item))).join('');
+
       // 避免重复，取层级的
       const name = _u.join('.');
 
@@ -82,14 +81,14 @@ export const forMenu = (menuList) => {
       const has = url.startsWith('/');
       const meta = { title: menuName, frameSrc: globSetting.apiUrl + (has ? url : `/${url}`) };
 
-      return { path, name: `${prefixName}.${name}`, meta };
+      return { path, name: [...currentPaths, name].join('.'), meta };
     }
-  };
+  }
 
   for (const menItem of menuList) {
     menus.push(handle(menItem, 1));
   }
-  debugger;
+  console.log(menus);
   return menus;
 };
 

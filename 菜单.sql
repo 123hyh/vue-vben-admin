@@ -216,6 +216,7 @@ UPDATE sys_menu t1 JOIN sys_menu t2 on t2.parent_id = t1.menu_id set t2.url = 'w
 UPDATE sys_menu t1 JOIN sys_menu t2 on t2.parent_id = t1.menu_id set t2.url = 'sales' WHERE t1.menu_name = '报表管理' and t2.menu_name = '业务报表';
 
 
+UPDATE sys_menu t1 set t1.url = '/eas' WHERE t1.menu_name = 'EAS系统对接';
 
 
 

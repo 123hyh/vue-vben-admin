@@ -31,7 +31,7 @@
         v-model:value="formData.validateCode"
         placeholder="验证码"
         autocomplete="off"
-        class="validate-code-wrap"
+        class="fix-auto-fill validate-code-wrap"
       >
         <template #addonAfter>
           <img
@@ -164,7 +164,7 @@
         username: data.account,
         mode: 'none', //不要默认的错误提示
         validateCode: data.validateCode,
-        rememberMe: false,
+        rememberMe: unref(rememberMe),
       });
       if (userInfo) {
         notification.success({
@@ -198,6 +198,7 @@
       > .ant-input-group-addon {
         flex-grow: 1;
         padding: 0;
+        width: 100px;
 
         img {
           width: 100%;
