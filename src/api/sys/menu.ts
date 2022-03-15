@@ -26,9 +26,12 @@ const menuIconMap = {
   费用管理: 'ant-design:money-collect-filled',
   风控管理: 'wpf:security-checked',
   系统工具: 'ant-design:tool-filled',
-  供应链管理: 'carbon:chart-relationship',
+  订单管理: 'carbon:chart-relationship',
   公司管理: 'ic:baseline-format-align-right',
   关务管理: 'gridicons:customize',
+  客户管理: 'raphael:customer',
+  财务管理: 'carbon:finance',
+  基础资料: 'gg:file-document',
 };
 
 /**
@@ -47,7 +50,7 @@ export const forMenu = (menuList) => {
    */
   const makeRedirectPaths = (children: any[], prefixPaths: string[]) => {
     function _handle(children: any[], paths: string[]): string[] {
-      const { path, children: _c } = children[0];
+      const { path, children: _c } = children[0] ?? {};
       paths.push(path);
       if (Array.isArray(_c) && _c[0]) {
         return _handle(_c, paths);
@@ -75,7 +78,7 @@ export const forMenu = (menuList) => {
         icon: '',
         title: menuName,
       };
-      if (menuIconMap[menuName]) {
+      if (menuIconMap[menuName] && tierNum === 1) {
         meta.icon = menuIconMap[menuName];
       }
       const name = join('.');
