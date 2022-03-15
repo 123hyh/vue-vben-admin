@@ -5,8 +5,8 @@
       <Summary :loading="loading" class="enter-y" />
       <Utils :loading="loading" class="enter-y !mt-4" />
       <div class="md:flex md:mt-4 enter-y md:space-x-4">
-        <Todo :loading="loading" class="md:flex-1 !<md:mt-4" />
-        <WarnNotice :loading="loading" class="md:flex-1 !<md:mt-4" />
+        <Todo :loading="loading" class="md:w-1/2 !<md:mt-4" />
+        <WarnNotice :loading="loading" class="md:w-1/2 !<md:mt-4" />
       </div>
     </div>
     <!-- 右侧 -->

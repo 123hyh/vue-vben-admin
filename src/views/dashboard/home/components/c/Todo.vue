@@ -4,16 +4,14 @@
     <template #extra>
       <span @click.stop="goLorem" class="cursor-pointer text-blue-500">更多</span>
     </template>
-    <ul style="max-height: 300px" class="overflow-auto">
+    <ul style="max-height: 300px" class="overflow-auto" :class="`${prefixCls}-list`">
       <li
-        @click.stop="goTodo"
+        @click.stop="() => goTodo(item)"
         v-for="(item, index) in list"
         :key="item.todoTime + index"
-        class="table w-full py-1"
+        class="w-full py-1 flex items-center cursor-pointer hover:text-blue-500/70"
       >
-        <div class="table-cell !border-blue-500/80" style="border-left: 3px solid"></div>
-        <div class="table-cell indent-xs">{{ item.itemName }}</div>
-        <div class="table-cell text-right text-gray-500/50">{{ item.todoTime }}</div>
+        <div class="w-full pl-4">{{ item.itemName }}</div>
       </li>
     </ul>
   </Card>
@@ -37,6 +35,12 @@
   function goLorem() {
     push('/companyManage/process/processTodoitem');
   }
+  function goTodo(item) {
+    $.modal.openFull(
+      item.itemName,
+      '/basic-api/bas/basCompanyCreditlineTmp/process/A3B22319-A3E5-42AF-BC46-B5AA34DE0276',
+    );
+  }
   const getList = async () => {
     const [res] = await useService(() => getTodoList({ pageSize: 10, pageNum: 1 }));
     if (res) {
@@ -46,4 +50,19 @@
   onMounted(getList);
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+  @prefix-cls: ~'@{namespace}-home-todo';
+  .@{prefix-cls} {
+    &-list > li {
+      white-space: nowrap;
+      overflow: hidden;
+
+      &::before {
+        display: block;
+        content: '';
+        height: 15px;
+        border-left: 3px solid rgba(59, 130, 246, 0.8);
+      }
+    }
+  }
+</style>
