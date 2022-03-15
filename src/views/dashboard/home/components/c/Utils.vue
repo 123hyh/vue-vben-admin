@@ -3,12 +3,13 @@
   <Card size="small" title="常用功能" :class="`${prefixCls}`" :loading="loading">
     <div>
       <!-- 按钮列表 -->
-      <div class="flex flex-wrap gap-2 <sm:max-h-screen-sm overflow-auto">
+      <div class="flex flex-wrap gap-2 <sm:max-h-screen-sm overflow-auto" style="max-height: 200px">
         <Button
           v-for="item in quickMenus"
           :key="item.menuId"
           size="large"
-          class="!px-12 !bg-gray-500/10 !border-transparent flex-auto"
+          class="!px-12 !bg-gray-500/10 !border-transparent <md:flex-auto"
+          style="flex-basis: 6em"
           @click.stop="() => goPage(item)"
           >{{ item.menuName }}</Button
         >

@@ -6,7 +6,7 @@
         >更多</span
       >
     </template>
-    <ul>
+    <ul style="max-height: 300px" class="overflow-auto">
       <li v-for="(item, index) in list" :key="item.todoTime + index" class="table w-full py-1">
         <div class="table-cell !border-red-500/80" style="border-left: 3px solid"></div>
         <div class="table-cell indent-xs">{{ item.itemName }}</div>

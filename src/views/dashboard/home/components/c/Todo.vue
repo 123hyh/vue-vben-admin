@@ -4,7 +4,7 @@
     <template #extra>
       <span @click.stop="goLorem" class="cursor-pointer text-blue-500">更多</span>
     </template>
-    <ul>
+    <ul style="max-height: 300px" class="overflow-auto">
       <li
         @click.stop="goTodo"
         v-for="(item, index) in list"

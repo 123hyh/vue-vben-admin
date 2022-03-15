@@ -120,6 +120,8 @@
   import { useDesign } from '/@/hooks/web/useDesign';
   //import { onKeyStroke } from '@vueuse/core';
   import { useGlobSetting } from '/@/hooks/setting';
+  import { isDevMode } from '../../../utils/env';
+  const isDev = isDevMode();
   const { apiUrl } = useGlobSetting();
 
   const ACol = Col;
@@ -139,8 +141,8 @@
   const rememberMe = ref(false);
 
   const formData = reactive({
-    account: 'super',
-    password: 'zhyfyl1996',
+    account: isDev ? 'super' : '',
+    password: isDev ? 'zhyfyl1996' : '',
     validateCode: '',
   });
   const validateCodeSrc = computed(

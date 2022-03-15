@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 md:flex w-full md:space-x-4">
+  <div :class="`${prefixCls}`" class="p-4 md:flex w-full md:space-x-4">
     <!-- 左侧 -->
     <div class="left-wrap md:basis-3/4">
       <Summary :loading="loading" class="enter-y" />
@@ -17,6 +17,8 @@
   </div>
 </template>
 <script lang="ts" setup>
+  import { useDesign } from '/@/hooks/web/useDesign';
+  const { prefixCls } = useDesign('home-page');
   import { ref } from 'vue';
   import Summary from './components/c/Summary.vue';
   import ExchangeRate from './components/c/ExchangeRate.vue';
