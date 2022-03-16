@@ -63,7 +63,7 @@ export const forMenu = (menuList) => {
   };
 
   function handle(menuItem: any, tierNum: number, prefixPaths = [] as string[]) {
-    const { menuType, menuName, url, children = [] } = menuItem;
+    const { menuType, menuName, url, children = [], component } = menuItem;
 
     // 当前路由的路径集合
     const currentPaths = [...prefixPaths, url];
@@ -72,6 +72,10 @@ export const forMenu = (menuList) => {
      * menuType = M 为目录
      */
     if (menuType === 'M') {
+      //  root path trim \/
+      if (tierNum === 1 && currentPaths[0]) {
+        currentPaths[0] = currentPaths[0].replace(/^\//, '');
+      }
       const _c = children.map((item) => handle(item, tierNum + 1, currentPaths));
       const redirectPaths = makeRedirectPaths(_c, currentPaths);
       const join = (separator: string) => redirectPaths.join(separator);
@@ -104,8 +108,10 @@ export const forMenu = (menuList) => {
       const path = isNetWorkUrl(url) ? url : encodeURIComponent(currentPath);
       const has = url.startsWith('/');
       const meta = { title: menuName, frameSrc: globSetting.apiUrl + (has ? url : `/${url}`) };
-
-      return { path, name: [...currentPaths, name].join('.'), meta };
+      if (children) {
+        debugger;
+      }
+      return { path, name: [...currentPaths, name].join('.'), meta, component };
     }
   }
 

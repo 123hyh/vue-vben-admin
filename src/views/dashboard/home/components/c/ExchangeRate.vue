@@ -4,9 +4,30 @@
     <template #extra>
       <div @click.stop="goLorem" class="cursor-pointer text-blue-500">更多</div>
     </template>
-    <div class="flex">
+      <div class="w-full table text-xs border-collapse">
+        <div class="table-row-group">
+          <div class="table-row">
+            <div class="table-cell border border-emerald-500 p-1 text-emerald-600"></div>
+            <div class="table-cell border border-emerald-500 p-1 text-emerald-600">海关汇率</div>
+            <div class="table-cell border border-emerald-500 p-1 text-emerald-600">中银汇率</div>
+
+          </div>
+          <div class="table-row">
+            <div class="table-cell border border-emerald-500 p-1 text-emerald-600"></div>
+            <div class="table-cell border border-emerald-500 p-1 text-emerald-600">3,000</div>
+            <div class="table-cell border border-emerald-500 p-1 text-emerald-600">18,000</div>
+          </div>
+        </div>
+        <div class="table-footer-group">
+          <div class="table-row">
+            <div class="table-cell border border-emerald-500 p-1 text-emerald-600">Totals</div>
+            <div class="table-cell border border-emerald-500 p-1 text-emerald-600">3,000</div>
+            <div class="table-cell border border-emerald-500 p-1 text-emerald-600">21,000</div>
+          </div>
+        </div>
+      </div>
       <!-- 海关汇率 -->
-      <div class="basis-1/2 px-4">
+      <!-- <div class="basis-1/2 px-4">
         <div class="text-gray-500/80">海关汇率</div>
         <ul>
           <li class="pt-2" v-for="(item, i) in cusRates" :key="'c_' + i + '_' + item.value"
@@ -15,9 +36,9 @@
             }}</span></li
           >
         </ul>
-      </div>
+      </div> -->
       <!-- 中银汇率 -->
-      <div class="basis-1/2 px-4">
+      <!-- <div class="basis-1/2 px-4">
         <div class="text-gray-500/80">中银汇率</div>
         <ul>
           <li class="pt-2" v-for="(item, i) in bocRates" :key="'b_' + i + '_' + item.value"
@@ -26,8 +47,7 @@
             }}</span></li
           >
         </ul>
-      </div>
-    </div>
+      </div> -->
   </Card>
 </template>
 
