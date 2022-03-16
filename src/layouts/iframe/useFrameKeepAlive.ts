@@ -21,8 +21,9 @@ export function useFrameKeepAlive() {
   });
 
   const getOpenTabList = computed((): string[] => {
+    const cacheSet = new Set(tabStore.getCachedTabList);
     return tabStore.getTabList.reduce((prev: string[], next) => {
-      if (next.meta && Reflect.has(next.meta, 'frameSrc')) {
+      if (next.meta && Reflect.has(next.meta, 'frameSrc') && cacheSet.has(next.name as string)) {
         prev.push(next.name as string);
       }
       return prev;
