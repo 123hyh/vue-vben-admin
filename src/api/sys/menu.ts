@@ -3,6 +3,7 @@ import { useGlobSetting } from '/@/hooks/setting';
 import { isNullOrUnDef } from '/@/utils/is';
 import { capitalize } from 'vue';
 const globSetting = useGlobSetting();
+import { template } from 'lodash-es';
 
 /**
  * 校验是否远程地址
@@ -117,6 +118,7 @@ export const forMenu = (menuList) => {
 
 enum Api {
   GetMenuList = '/system/menu/currentUserMenus',
+  RemoteQuiteMenu = '/system/menu/shortcut/remove/${id}',
 }
 
 /**
@@ -126,3 +128,12 @@ enum Api {
 export const getMenuList = () => {
   return defHttp.get<any>({ url: Api.GetMenuList });
 };
+
+/**
+ * 删除快捷菜单
+ */
+
+export const remoteQuiteMenu = (id) =>
+  defHttp.post({
+    url: template(Api.RemoteQuiteMenu)({ id }),
+  });

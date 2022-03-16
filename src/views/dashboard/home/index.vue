@@ -1,16 +1,16 @@
 <template>
   <div :class="`${prefixCls}`" class="p-4 md:flex w-full md:space-x-4">
     <!-- 左侧 -->
-    <div class="left-wrap md:basis-3/4">
+    <div :class="`${prefixCls}-left-wrap`">
       <Summary :loading="loading" class="enter-y" />
       <Utils :loading="loading" class="enter-y !mt-4" />
-      <div class="md:flex md:mt-4 enter-y md:space-x-4">
-        <Todo :loading="loading" class="md:w-1/2 !<md:mt-4" />
-        <WarnNotice :loading="loading" class="md:w-1/2 !<md:mt-4" />
+      <div class="md:flex md:mt-4 enter-y" :class="`${prefixCls}-left-wrap-todo`">
+        <Todo :loading="loading" class="!<md:mt-4 !md:mr-4" />
+        <WarnNotice :loading="loading" class="!<md:mt-4" />
       </div>
     </div>
     <!-- 右侧 -->
-    <div class="right-wrap md:flex-grow enter-x">
+    <div class="enter-x" :class="`${prefixCls}-right-wrap`">
       <ExchangeRate :loading="loading" class="!md:mt-0 !<md:mt-4" />
       <Announce :loading="loading" class="!mt-4" />
     </div>
@@ -33,3 +33,24 @@
     loading.value = false;
   }, 1500);
 </script>
+<style scoped lang="less">
+    @prefix-cls: ~'@{namespace}-home-page';
+    @r-width: 330px;
+    .@{prefix-cls}{
+      @media (min-width: 1023.9px) {
+        &-left-wrap{
+          width: calc(100% - @r-width - 1rem);
+
+          &-todo{
+            & > * {
+              width: calc(50% - 0.5rem);
+            }
+          }
+        }
+
+        &-right-wrap{
+          width: @r-width;
+        }
+    }
+  }
+</style>

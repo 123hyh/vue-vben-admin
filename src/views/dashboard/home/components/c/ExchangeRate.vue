@@ -95,7 +95,7 @@
     },
   ] as Rate[]);
   function goLorem() {
-    push('/supplierChain/bas/erpBasExchangerate');
+    push('/bas/erpBasExchangerate');
   }
 </script>
 

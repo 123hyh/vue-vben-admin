@@ -1,13 +1,13 @@
 <template>
   <Dropdown>
-    <a class="ant-dropdown-link" @click.prevent>
+    <a class="ant-dropdown-link text-blue-800" @click.prevent>
       {{ getOrgName }}
       <DownOutlined />
     </a>
     <template #overlay>
       <Menu @click="changeOrg">
         <template v-for="item in options" :key="item.orgId">
-          <MenuItem>
+          <MenuItem :disabled="item.orgId === value">
             <a href="javascript:;">{{ item.deptName }}</a>
           </MenuItem>
         </template>

@@ -12,8 +12,17 @@
         v-for="(item, index) in list"
         :key="item.todoTime + index"
         class="w-full py-1 flex items-center cursor-pointer hover:text-blue-500/70"
+        :class="`${prefixCls}-list-item`"
       >
-        <div class="w-full pl-4">{{ item.itemName }}</div>
+        <div
+          class="flex-grow overflow-hidden overflow-ellipsis whitespace-nowrap px-4"
+          :class="`${prefixCls}-list-item-text`"
+          :title="item.itemName"
+          >{{ item.itemName }}</div
+        >
+        <div class="text-gray-500/50" :class="`${prefixCls}-list-item-time`">{{
+          formatDate(item.todoTime)
+        }}</div>
       </li>
     </ul>
   </Card>
@@ -24,9 +33,11 @@
   const { prefixCls } = useDesign('home-warn');
   import { Card } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, computed } from 'vue';
   import { getTodoList } from '/@/api/process/index.ts';
   import { useService } from '/@/utils';
+  import dayjs from 'dayjs';
+
   defineProps({
     loading: {
       type: Boolean,
@@ -43,6 +54,7 @@
       '/basic-api/bas/basCompanyCreditlineTmp/process/A3B22319-A3E5-42AF-BC46-B5AA34DE0276',
     );
   }
+  const formatDate = computed(() => (time: string) => dayjs(time).format('YYYY-MM-DD'));
   onMounted(async () => {
     const [res] = await useService(() => getTodoList({ pageSize: 10, pageNum: 3 }));
     if (res) {
@@ -54,15 +66,29 @@
 <style scoped lang="less">
   @prefix-cls: ~'@{namespace}-home-warn';
   .@{prefix-cls} {
-    &-list > li {
-      white-space: nowrap;
-      overflow: hidden;
+    &-list {
+      &-item {
+        @time-w: 5rem;
 
-      &::before {
-        display: block;
-        content: '';
-        height: 15px;
-        border-left: 3px solid rgba(239, 68, 68, 0.8);
+        &-text {
+          width: calc(100% - @time-w);
+        }
+
+        &-time {
+          width: @time-w;
+        }
+      }
+
+      & > li {
+        // white-space: nowrap;
+        // overflow: hidden;
+
+        &::before {
+          display: block;
+          content: '';
+          height: 15px;
+          border-left: 3px solid rgba(239, 68, 68, 0.8);
+        }
       }
     }
   }

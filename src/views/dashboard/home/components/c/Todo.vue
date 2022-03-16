@@ -10,8 +10,17 @@
         v-for="(item, index) in list"
         :key="item.todoTime + index"
         class="w-full py-1 flex items-center cursor-pointer hover:text-blue-500/70"
+        :class="`${prefixCls}-list-item`"
       >
-        <div class="w-full pl-4">{{ item.itemName }}</div>
+        <div
+          class="flex-grow overflow-hidden overflow-ellipsis whitespace-nowrap px-4"
+          :class="`${prefixCls}-list-item-text`"
+          :title="item.itemName"
+          >{{ item.itemName }}</div
+        >
+        <div class="text-gray-500/50" :class="`${prefixCls}-list-item-time`">{{
+          formatDate(item.todoTime)
+        }}</div>
       </li>
     </ul>
   </Card>
@@ -22,9 +31,10 @@
   const { prefixCls } = useDesign('home-todo');
   import { Card } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
-  import { defineProps, ref, onMounted } from 'vue';
+  import { defineProps, ref, onMounted, computed } from 'vue';
   import { getTodoList } from '/@/api/process/index.ts';
-  import { useService } from '../../../../../utils';
+  import { useService } from '/@/utils';
+  import dayjs from 'dayjs';
   defineProps({
     loading: {
       type: Boolean,
@@ -47,21 +57,36 @@
       list.value = res.rows;
     }
   };
+  const formatDate = computed(() => (time: string) => dayjs(time).format('YYYY-MM-DD'));
   onMounted(getList);
 </script>
 
 <style scoped lang="less">
   @prefix-cls: ~'@{namespace}-home-todo';
   .@{prefix-cls} {
-    &-list > li {
-      white-space: nowrap;
-      overflow: hidden;
+    &-list {
+      & > li {
+        // white-space: nowrap;
+        // overflow: hidden;
 
-      &::before {
-        display: block;
-        content: '';
-        height: 15px;
-        border-left: 3px solid rgba(59, 130, 246, 0.8);
+        &::before {
+          display: block;
+          content: '';
+          height: 15px;
+          border-left: 3px solid rgba(59, 130, 246, 0.8);
+        }
+      }
+
+      &-item {
+        @time-w: 5rem;
+
+        &-text {
+          width: calc(100% - @time-w);
+        }
+
+        &-time {
+          width: @time-w;
+        }
       }
     }
   }
