@@ -16,11 +16,11 @@ const dashboard: AppRouteModule = {
   children: [
     {
       path: 'home',
-      name: 'home',
+      name: 'Home',
       // component: () => import('/@/views/dashboard/analysis/index.vue'),
       component: () => import('/@/views/dashboard/home/index.vue'),
       meta: {
-        // affix: true,
+        affix: true,
         // title: t('routes.dashboard.analysis'),
         title: '首页',
       },

@@ -16,22 +16,38 @@
     </div>
   </div>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
   import { useDesign } from '/@/hooks/web/useDesign';
-  const { prefixCls } = useDesign('home-page');
-  import { ref } from 'vue';
+  import { ref, defineComponent } from 'vue';
   import Summary from './components/c/Summary.vue';
   import ExchangeRate from './components/c/ExchangeRate.vue';
   import Utils from './components/c/Utils.vue';
   import Todo from './components/c/Todo.vue';
   import WarnNotice from './components/c/WarnNotice.vue';
   import Announce from './components/c/Announce.vue';
+  export default defineComponent({
+    name: 'Home',
+    components: {
+      Summary,
+      ExchangeRate,
+      Utils,
+      Todo,
+      WarnNotice,
+      Announce,
+    },
+    setup() {
+      const loading = ref(true);
+      const { prefixCls } = useDesign('home-page');
 
-  const loading = ref(true);
-
-  setTimeout(() => {
-    loading.value = false;
-  }, 1500);
+      setTimeout(() => {
+        loading.value = false;
+      }, 1500);
+      return {
+        prefixCls,
+        loading,
+      };
+    },
+  });
 </script>
 <style scoped lang="less">
     @prefix-cls: ~'@{namespace}-home-page';
