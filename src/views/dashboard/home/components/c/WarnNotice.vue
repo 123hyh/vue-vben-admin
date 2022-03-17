@@ -49,10 +49,7 @@
     push('/companyManage/process/processTodoitem');
   }
   function goTodo(item) {
-    $.modal.openFull(
-      item.itemName,
-      '/basic-api/bas/basCompanyCreditlineTmp/process/A3B22319-A3E5-42AF-BC46-B5AA34DE0276',
-    );
+    $.modal.openFull(item.itemName, `/basic-api/${item.formUrl}`);
   }
   const formatDate = computed(() => (time: string) => dayjs(time).format('YYYY-MM-DD'));
   onMounted(async () => {

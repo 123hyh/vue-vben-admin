@@ -108,9 +108,6 @@ export const forMenu = (menuList) => {
       const path = isNetWorkUrl(url) ? url : encodeURIComponent(currentPath);
       const has = url.startsWith('/');
       const meta = { title: menuName, frameSrc: globSetting.apiUrl + (has ? url : `/${url}`) };
-      if (children) {
-        debugger;
-      }
       return { path, name: [...currentPaths, name].join('.'), meta, component };
     }
   }

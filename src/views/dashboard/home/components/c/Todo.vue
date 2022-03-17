@@ -46,10 +46,7 @@
     push('/companyManage/process/processTodoitem');
   }
   function goTodo(item) {
-    $.modal.openFull(
-      item.itemName,
-      '/basic-api/bas/basCompanyCreditlineTmp/process/A3B22319-A3E5-42AF-BC46-B5AA34DE0276',
-    );
+    $.modal.openFull(item.itemName, `/basic-api/${item.formUrl}`);
   }
   const getList = async () => {
     const [res] = await useService(() => getTodoList({ pageSize: 10, pageNum: 1 }));
@@ -66,9 +63,6 @@
   .@{prefix-cls} {
     &-list {
       & > li {
-        // white-space: nowrap;
-        // overflow: hidden;
-
         &::before {
           display: block;
           content: '';

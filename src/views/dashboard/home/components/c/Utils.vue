@@ -18,8 +18,8 @@
         >
           {{ item.menuName }}
           <template #icon>
-            <div class="absolute hidden right-0 -top-0.5" :class="`${prefixCls}-menu-item-remove`">
-              <CloseOutlined @click.stop="() => goRemoveItem(item)" />
+            <div class="absolute hidden right-0 -top-2" :class="`${prefixCls}-menu-item-remove`">
+              <CloseOutlined style="font-size: 0.7rem" @click.stop="() => goRemoveItem(item)" />
             </div>
           </template>
         </Button>
