@@ -43,6 +43,7 @@ async function bootstrap() {
 
   // Configure global error handling
   setupErrorHandle(app);
+
   // 当时有frame中台时注册事件
   setupScmFrameHook();
 
