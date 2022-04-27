@@ -1,7 +1,5 @@
 import { defHttp } from '/@/utils/http/axios';
 import { useGlobSetting } from '/@/hooks/setting';
-import { isNullOrUnDef } from '/@/utils/is';
-import { capitalize } from 'vue';
 const globSetting = useGlobSetting();
 import { template } from 'lodash-es';
 
@@ -63,19 +61,17 @@ export const forMenu = (menuList) => {
   };
 
   function handle(menuItem: any, tierNum: number, prefixPaths = [] as string[]) {
-    const { menuType, menuName, url, children = [], component } = menuItem;
+    const { menuType, menuName, url, children = [], isIframe = 0, component } = menuItem;
 
     // 当前路由的路径集合
     const currentPaths = [...prefixPaths, url];
 
+    // 避免重复，取层级的
+    const name = currentPaths.map((item) => item.replace(/^\//, '')).join('.');
     /**
      * menuType = M 为目录
      */
     if (menuType === 'M') {
-      //  root path trim \/
-      if (tierNum === 1 && currentPaths[0]) {
-        currentPaths[0] = currentPaths[0].replace(/^\//, '');
-      }
       const _c = children.map((item) => handle(item, tierNum + 1, currentPaths));
       const redirectPaths = makeRedirectPaths(_c, currentPaths);
       const join = (separator: string) => redirectPaths.join(separator);
@@ -86,29 +82,34 @@ export const forMenu = (menuList) => {
       if (menuIconMap[menuName] && tierNum === 1) {
         meta.icon = menuIconMap[menuName];
       }
-      const name = join('.');
       const redirect = join('/');
-
-      return {
+      const opt = {
         path: url,
         name,
         redirect,
         meta,
         children: _c,
-        component: 'LAYOUT',
-      };
+      } as { [prop: string]: any };
+      // 组件名称
+      if (component) {
+        opt.component = component;
+      }
+      return opt;
     } else {
-      const _u = url.split('/').filter((item) => item !== '' && !isNullOrUnDef(item));
-      const currentPath = _u.map((item, i) => (i == 0 ? item : capitalize(item))).join('');
-
-      // 避免重复，取层级的
-      const name = _u.join('.');
-
       // 存在重复路由不嵌套处理
-      const path = isNetWorkUrl(url) ? url : encodeURIComponent(currentPath);
-      const has = url.startsWith('/');
-      const meta = { title: menuName, frameSrc: globSetting.apiUrl + (has ? url : `/${url}`) };
-      return { path, name: [...currentPaths, name].join('.'), meta, component };
+      const path = isNetWorkUrl(url) ? url : encodeURIComponent(url);
+      const meta = { title: menuName } as any;
+
+      if (isIframe === 1) {
+        meta.frameSrc = globSetting.apiUrl + currentPaths.join('/');
+      }
+      const opt = { path, name, meta } as {
+        [prop: string]: any;
+      };
+      if (component) {
+        opt.component = component;
+      }
+      return opt;
     }
   }
 
