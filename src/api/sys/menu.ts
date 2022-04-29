@@ -82,11 +82,10 @@ export const forMenu = (menuList) => {
       if (menuIconMap[menuName] && tierNum === 1) {
         meta.icon = menuIconMap[menuName];
       }
-      const redirect = join('/');
       const opt = {
         path: url,
         name,
-        redirect,
+        redirect: join('/'),
         meta,
         children: _c,
       } as { [prop: string]: any };
