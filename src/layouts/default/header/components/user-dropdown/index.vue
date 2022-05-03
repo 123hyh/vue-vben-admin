@@ -92,7 +92,7 @@
 
       // 打开个人中心
       function openPersonCenter() {
-        routerPush(`/system/user/profile`);
+        routerPush(`/sys/profile`);
       }
 
       function handleMenuClick(e: { key: MenuEvent }) {

@@ -31,6 +31,7 @@ const menuIconMap = {
   客户管理: 'raphael:customer',
   财务管理: 'carbon:finance',
   基础资料: 'gg:file-document',
+  杂费管理: 'ant-design:money-collect-filled',
 };
 
 /**
@@ -72,7 +73,7 @@ export const forMenu = (menuList) => {
      * menuType = M 为目录
      */
     if (menuType === 'M') {
-      const _c = children.map((item) => handle(item, tierNum + 1, currentPaths));
+      const _c = children.map((item) => handle(item, tierNum + 1, currentPaths)).filter(Boolean);
       const redirectPaths = makeRedirectPaths(_c, currentPaths);
       const join = (separator: string) => redirectPaths.join(separator);
       const meta = {
@@ -116,7 +117,7 @@ export const forMenu = (menuList) => {
     menus.push(handle(menItem, 1));
   }
   console.log(menus);
-  return menus;
+  return menus.filter(Boolean);
 };
 
 enum Api {
