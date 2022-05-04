@@ -91,7 +91,7 @@
   ] as Rate[]);
 
   function goLorem() {
-    push('/bas/erpBasExchangerate');
+    push('/bas/exchangerate');
   }
 </script>
 

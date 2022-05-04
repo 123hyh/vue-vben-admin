@@ -97,11 +97,18 @@ export const forMenu = (menuList) => {
       return opt;
     } else {
       // 存在重复路由不嵌套处理
-      const path = isNetWorkUrl(url) ? url : encodeURIComponent(url);
+      const isNetWork = isNetWorkUrl(url);
+
+      let path = isNetWork ? url : encodeURIComponent(url);
+
       const meta = { title: menuName } as any;
 
       if (isIframe === 1) {
-        meta.frameSrc = globSetting.apiUrl + currentPaths.join('/');
+        // 前缀为 http开头的定义为外链接(不允许直接open窗口)
+        path = isNetWork ? encodeURIComponent(url) : path;
+
+        const src = isNetWork ? url : globSetting.apiUrl + currentPaths.join('/');
+        meta.frameSrc = src;
       }
       const opt = { path, name, meta } as {
         [prop: string]: any;

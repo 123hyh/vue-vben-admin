@@ -43,7 +43,7 @@
   let list = ref([]);
   const { push } = useRouter();
   function goLorem() {
-    push('/companyManage/process/processTodoitem');
+    push('/org/process/todo');
   }
   function goTodo(item) {
     $.modal.openFull(item.itemName, `/basic-api/${item.formUrl}`);
