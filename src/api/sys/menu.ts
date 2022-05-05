@@ -5,13 +5,22 @@ import { template } from 'lodash-es';
 
 /**
  * 校验是否远程地址
- * @param path
  * @returns
+ * @param url
  */
 function isNetWorkUrl(url: string) {
   return /^((https?):\/\/)?([^!@#$%^&*?.\s-]([^!@#$%^&*?.\s]{0,63}[^!@#$%^&*?.\s])?\.)+[a-z]{2,6}\/?/.test(
     url,
   );
+}
+
+/**
+ * 判断url是否带有参数
+ * @param url
+ * @returns
+ */
+function hasUrlParams(url: string) {
+  return /(.*)\?(.*)/.test(url);
 }
 
 /**
@@ -37,7 +46,6 @@ const menuIconMap = {
 /**
  * 遍历处理菜单
  * @param menuList
- * @param tierNum
  * @returns
  */
 export const forMenu = (menuList) => {
@@ -46,6 +54,7 @@ export const forMenu = (menuList) => {
   /**
    * 构造重定向地址
    * @param children
+   * @param prefixPaths
    * @returns
    */
   const makeRedirectPaths = (children: any[], prefixPaths: string[]) => {
@@ -99,7 +108,8 @@ export const forMenu = (menuList) => {
       // 存在重复路由不嵌套处理
       const isNetWork = isNetWorkUrl(url);
 
-      let path = isNetWork ? url : encodeURIComponent(url);
+      // 存在 query 参数(?x=1&y=2) 的  转义
+      let path = hasUrlParams(url) ? encodeURIComponent(url) : url;
 
       const meta = { title: menuName } as any;
 
@@ -107,8 +117,7 @@ export const forMenu = (menuList) => {
         // 前缀为 http开头的定义为外链接(不允许直接open窗口)
         path = isNetWork ? encodeURIComponent(url) : path;
 
-        const src = isNetWork ? url : globSetting.apiUrl + currentPaths.join('/');
-        meta.frameSrc = src;
+        meta.frameSrc = isNetWork ? url : globSetting.apiUrl + currentPaths.join('/');
       }
       const opt = { path, name, meta } as {
         [prop: string]: any;
