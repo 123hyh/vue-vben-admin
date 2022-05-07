@@ -31,7 +31,7 @@
   const { prefixCls } = useDesign('home-todo');
   import { Card } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
-  import { defineProps, ref, onMounted, computed } from 'vue';
+  import { ref, onMounted, computed } from 'vue';
   import { getTodoList } from '/@/api/process/index.ts';
   import { useService } from '/@/utils';
   import dayjs from 'dayjs';

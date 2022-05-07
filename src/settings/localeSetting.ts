@@ -25,5 +25,6 @@ export const localeList: DropMenu[] = [
   {
     text: 'English',
     event: LOCALE.EN_US,
+    disabled: true,
   },
 ];

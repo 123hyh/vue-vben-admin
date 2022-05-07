@@ -44,7 +44,7 @@
   const { prefixCls } = useDesign('home-utils');
   import { Card, Button } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
-  import { ref, onMounted, defineProps } from 'vue';
+  import { ref, onMounted } from 'vue';
   import { PlusOutlined, CloseOutlined } from '@ant-design/icons-vue';
   import { useGlobSetting } from '/@/hooks/setting';
   import { getQuickMenus } from '/@/api/sys/user';

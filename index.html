@@ -161,6 +161,35 @@
         </div>
       </div>
     </div>
+    <script>
+      // 请求 icon
+      (() => {
+        fetch(
+          '/basic-api/system/dict/data/homeData?dictType=sys_userdefined_fieldname&dictValues=logo',
+          { method: 'GET' },
+        )
+          .then((e) => e.json())
+          .then(({ data = [] } = {}) => {
+            const linkElem = document.querySelector('head > link[rel*=icon]');
+            const logoElem = document.querySelector('.app-loading-logo');
+            const KEY = 'APP_LOG_SRC';
+            const APP_LOG_SRC = localStorage.getItem(KEY);
+            const currentVal = data[0];
+            if (linkElem && currentVal) {
+              const src = currentVal.dictLabel;
+              linkElem.rel = 'shortcut icon';
+              linkElem.href = src ?? linkElem.getAttribute('href');
+              const isEqual = APP_LOG_SRC === currentVal.dictLabel;
+              if (logoElem) {
+                logoElem.src = src ?? logoElem.getAttribute('src');
+              }
+              if (!isEqual) {
+                localStorage.setItem(KEY, currentVal.dictLabel);
+              }
+            }
+          });
+      })();
+    </script>
     <script type="module" src="/src/main.ts"></script>
     <!-- iframe中台所需的静态资源 -->
     <%- injectScript %>

@@ -41,7 +41,7 @@
   const { prefixCls } = useDesign('home-exrate');
   import { Card } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
-  import { defineProps, ref } from 'vue';
+  import { ref } from 'vue';
   import { useGlobSetting } from '/@/hooks/setting';
 
   defineProps({

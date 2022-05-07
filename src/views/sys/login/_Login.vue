@@ -25,7 +25,7 @@
 
 <script lang="ts" setup>
   import { reactive } from 'vue';
-  import { getHomeData } from '/@/api/sys/dict.ts';
+  import { getHomeData } from '/@/api/sys/dict';
   import { useDesign } from '/@/hooks/web/useDesign';
   const { prefixCls } = useDesign('login_wrap');
   import LoginForm from './_LoginForm.vue';
