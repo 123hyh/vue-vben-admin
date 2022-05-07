@@ -7,14 +7,16 @@
       >
     </template>
     <ul>
-      <li
-        @click.stop="goDetail"
-        v-for="(item, index) in list"
-        :key="item.label + index"
-        class="pointer-events-none cursor-pointer w-full py-1 truncate"
-      >
-        {{ item.label }}
-      </li>
+      <template v-if="false">
+        <li
+          @click.stop="goDetail"
+          v-for="(item, index) in list"
+          :key="item.label + index"
+          class="pointer-events-none cursor-pointer w-full py-1 truncate"
+        >
+          {{ item.label }}
+        </li>
+      </template>
     </ul>
   </Card>
 </template>

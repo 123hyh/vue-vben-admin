@@ -7,23 +7,25 @@
       >
     </template>
     <ul style="max-height: 300px" class="overflow-auto" :class="`${prefixCls}-list`">
-      <li
-        @click.stop="() => goTodo(item)"
-        v-for="(item, index) in list"
-        :key="item.todoTime + index"
-        class="w-full py-1 flex items-center cursor-pointer hover:text-blue-500/70"
-        :class="`${prefixCls}-list-item`"
-      >
-        <div
-          class="flex-grow overflow-hidden overflow-ellipsis whitespace-nowrap px-4"
-          :class="`${prefixCls}-list-item-text`"
-          :title="item.itemName"
-          >{{ item.itemName }}</div
+      <template v-if="false">
+        <li
+          @click.stop="() => goTodo(item)"
+          v-for="(item, index) in list"
+          :key="item.todoTime + index"
+          class="w-full py-1 flex items-center cursor-pointer hover:text-blue-500/70"
+          :class="`${prefixCls}-list-item`"
         >
-        <div class="text-gray-500/50" :class="`${prefixCls}-list-item-time`">{{
-          formatDate(item.todoTime)
-        }}</div>
-      </li>
+          <div
+            class="flex-grow overflow-hidden overflow-ellipsis whitespace-nowrap px-4"
+            :class="`${prefixCls}-list-item-text`"
+            :title="item.itemName"
+            >{{ item.itemName }}</div
+          >
+          <div class="text-gray-500/50" :class="`${prefixCls}-list-item-time`">{{
+            formatDate(item.todoTime)
+          }}</div>
+        </li>
+      </template>
     </ul>
   </Card>
 </template>
