@@ -18,6 +18,7 @@
           <div class="py-2">{{ item.label }}</div>
           <CountTo
             :key="item.value1"
+            :decimals="4"
             :startVal="0"
             :endVal="+item.value1"
             class="font-bold text-2xl py-2"
@@ -26,7 +27,13 @@
             class="flex justify-between items-center gap-x-4 py-2"
             :class="item.value2 > 0 ? 'text-red-500' : 'text-green-500'"
           >
-            <CountTo :key="item.value2" :startVal="0" :endVal="+item.value2" suffix="%" />
+            <CountTo
+              :key="item.value2"
+              :decimals="4"
+              :startVal="0"
+              :endVal="+item.value2"
+              suffix="%"
+            />
             <Icon
               :icon="item.value2 > 0 ? 'carbon:arrow-up-right' : 'carbon:arrow-down-left'"
               :size="20"

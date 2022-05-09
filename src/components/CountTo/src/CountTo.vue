@@ -48,7 +48,6 @@
       let outputValue = useTransition(source);
 
       const value = computed(() => formatNumber(unref(outputValue)));
-
       watchEffect(() => {
         source.value = props.startVal;
       });
@@ -93,8 +92,16 @@
 
         const x = num.split('.');
         let x1 = x[0];
-        const x2 = x.length > 1 ? decimal + x[1] : '';
-
+        const x2 =
+          x.length > 1
+            ? (() => {
+                /**
+                 * 0值 不做 decimal
+                 */
+                const v = +x[1];
+                return v === 0 ? '' : decimal + x[1];
+              })()
+            : '';
         const rgx = /(\d+)(\d{3})/;
         if (separator && !isNumber(separator)) {
           while (rgx.test(x1)) {
