@@ -14,3 +14,62 @@ export interface RouteItem {
  * @description: Get menu return value
  */
 export type getMenuListResultModel = RouteItem[];
+
+export type Menu = {
+  /** 菜单ID */
+  menuId: number;
+
+  /** 菜单名称 */
+  menuName: string;
+
+  /** 父菜单名称 */
+  parentName: string;
+
+  /** 父菜单ID */
+  parentId: number;
+
+  /** 显示顺序 */
+  orderNum: string;
+
+  /** 菜单URL */
+  url: string;
+
+  /** 类型:0目录,1菜单,2按钮 */
+  menuType: 0 | 1 | 2;
+
+  /** 菜单状态:0显示,1隐藏 */
+  visible: 0 | 1;
+
+  /** 权限字符串 */
+  perms: string;
+
+  /** 菜单图标 */
+  icon: string;
+
+  /** 是否选择***/
+  flag: boolean;
+
+  /** 打开方式（menuItem页签 menuBlank新窗口） ***/
+  target: string;
+
+  /** 是否使用 iframe (旧页面使用) */
+  isIframe: number;
+
+  /** 前端组件路径 **/
+  component: string;
+};
+
+/**
+ * 菜单 vo
+ */
+export interface MenuVo {
+  /**
+   * 代理前缀
+   */
+  proxyPrefixPath: string;
+
+  /**
+   * 菜单 list
+   */
+  list: Menu[];
+}

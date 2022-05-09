@@ -1,7 +1,7 @@
 import { defHttp } from '/@/utils/http/axios';
-import { useGlobSetting } from '/@/hooks/setting';
-const globSetting = useGlobSetting();
 import { template } from 'lodash-es';
+import { BasicResponse } from '/@/api/model/baseModel';
+import { MenuVo, Menu } from '/@/api/sys/model/menuModel';
 
 /**
  * 校验是否远程地址
@@ -45,10 +45,11 @@ const menuIconMap = {
 
 /**
  * 遍历处理菜单
- * @param menuList
+ * @param menuList 菜单 list
+ * @param proxyPrefixPath iframe 页面 代理前缀
  * @returns
  */
-export const forMenu = (menuList) => {
+export const forMenu = (menuList: Menu[], proxyPrefixPath: string) => {
   const menus = [] as ReturnType<typeof handle>[];
 
   /**
@@ -116,7 +117,11 @@ export const forMenu = (menuList) => {
         // 前缀为 http开头的定义为外链接(不允许直接open窗口)
         path = isNetWork ? encodeURIComponent(url) : path;
 
-        meta.frameSrc = isNetWork ? url : globSetting.apiUrl + currentPaths.join('/');
+        // 暂时写死数据监控，不暴露 druid;
+        if (menuName === '数据监控') {
+          path = 'data';
+        }
+        meta.frameSrc = isNetWork ? url : `${proxyPrefixPath}${currentPaths.join('/')}`;
       }
       const opt = { path, name, meta } as {
         [prop: string]: any;
@@ -131,7 +136,6 @@ export const forMenu = (menuList) => {
   for (const menItem of menuList) {
     menus.push(handle(menItem, 1));
   }
-  console.log(menus);
   return menus.filter(Boolean);
 };
 
@@ -145,7 +149,7 @@ enum Api {
  */
 
 export const getMenuList = () => {
-  return defHttp.get<any>({ url: Api.GetMenuList });
+  return defHttp.get<BasicResponse<MenuVo>>({ url: Api.GetMenuList });
 };
 
 /**

@@ -186,8 +186,8 @@ export const usePermissionStore = defineStore({
           let routeList: AppRouteRecordRaw[] = [];
           try {
             // this.changePermissionCode();
-            const { data } = (await getMenuList()) as { data: AppRouteRecordRaw[] };
-            routeList = forMenu(data) as any;
+            const { data } = await getMenuList();
+            routeList = forMenu(data?.list ?? [], data?.proxyPrefixPath ?? '') as any;
           } catch (error) {
             console.error(error);
           }

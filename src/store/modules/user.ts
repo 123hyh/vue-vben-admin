@@ -153,7 +153,10 @@ export const useUserStore = defineStore({
           router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw);
           permissionStore.setDynamicAddedRoute(true);
         }
-        goHome && (await router.replace(userInfo?.homePath || PageEnum.BASE_HOME));
+        const GO_PATH = (router?.currentRoute?.value?.query?.redirect ??
+          userInfo?.homePath ??
+          PageEnum.BASE_HOME) as string;
+        goHome && (await router.replace(GO_PATH));
       }
       return userInfo;
     },

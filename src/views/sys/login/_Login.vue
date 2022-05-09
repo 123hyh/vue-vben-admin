@@ -66,7 +66,6 @@
   @prefix-cls: ~'@{namespace}-login_wrap';
   .@{prefix-cls} {
     &-bg {
-      // background-image: url('http://xunyu2test.dianmaotong.cn/upload/2022/03/11/ca05d89243f6a042b0a5ebe27b41c22f.jpg?version=1646968496169');
       background-size: 100% 100%;
     }
   }
