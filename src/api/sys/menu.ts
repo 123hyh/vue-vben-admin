@@ -9,7 +9,7 @@ import { template } from 'lodash-es';
  * @param url
  */
 function isNetWorkUrl(url: string) {
-  return /^((https?):\/\/)?([^!@#$%^&*?.\s-]([^!@#$%^&*?.\s]{0,63}[^!@#$%^&*?.\s])?\.)+[a-z]{2,6}\/?/.test(
+  return /^((https?):\/\/)([^!@#$%^&*?.\s-]([^!@#$%^&*?.\s]{0,63}[^!@#$%^&*?.\s])?\.)+[a-z]{2,6}\/?/.test(
     url,
   );
 }
@@ -107,7 +107,6 @@ export const forMenu = (menuList) => {
     } else {
       // 存在重复路由不嵌套处理
       const isNetWork = isNetWorkUrl(url);
-
       // 存在 query 参数(?x=1&y=2) 的  转义
       let path = hasUrlParams(url) ? encodeURIComponent(url) : url;
 
