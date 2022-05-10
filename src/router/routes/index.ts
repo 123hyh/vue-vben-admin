@@ -5,6 +5,7 @@ import { PAGE_NOT_FOUND_ROUTE, REDIRECT_ROUTE } from '/@/router/routes/basic';
 import { mainOutRoutes } from './mainOut';
 import { PageEnum } from '/@/enums/pageEnum';
 import { t } from '/@/hooks/web/useI18n';
+import { RouteItem } from '/@/api/sys/model/menuModel';
 
 const modules = import.meta.globEager('./modules/**/*.ts');
 
@@ -35,6 +36,22 @@ export const LoginRoute: AppRouteRecordRaw = {
     title: t('routes.basic.login'),
   },
 };
+
+/**
+ * 个人中心路由
+ * @param proxyPrefixPath 代理前缀
+ * @returns
+ */
+export const getProfileRoute = (proxyPrefixPath: string): RouteItem => ({
+  path: '/profile',
+  name: 'profile',
+  component: 'LAYOUT',
+  meta: {
+    title: '个人中心',
+    frameSrc: proxyPrefixPath + '/sys/profile',
+    hideMenu: true,
+  },
+});
 
 // Basic routing without permission
 export const basicRoutes = [

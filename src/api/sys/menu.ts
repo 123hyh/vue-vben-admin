@@ -2,7 +2,7 @@ import { defHttp } from '/@/utils/http/axios';
 import { template } from 'lodash-es';
 import { BasicResponse } from '/@/api/model/baseModel';
 import { MenuVo, Menu, RouteItem } from '/@/api/sys/model/menuModel';
-
+import { getProfileRoute } from '/@/router/routes';
 /**
  * 校验是否远程地址
  * @returns
@@ -134,6 +134,8 @@ export const forMenu = (menuList: Menu[], proxyPrefixPath: string) => {
   for (const menItem of menuList) {
     menus.push(handle(menItem, 1));
   }
+
+  menus.push(getProfileRoute(proxyPrefixPath));
   return menus.filter(Boolean);
 };
 

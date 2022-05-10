@@ -52,6 +52,7 @@
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
 
   import { useRouter } from 'vue-router';
+  import { getProfileRoute } from '/@/router/routes';
 
   type MenuEvent = 'logout' | 'personCenter' | 'lock';
 
@@ -92,7 +93,8 @@
 
       // 打开个人中心
       function openPersonCenter() {
-        routerPush(`/sys/profile`);
+        const { path } = getProfileRoute('');
+        routerPush(path);
       }
 
       function handleMenuClick(e: { key: MenuEvent }) {
