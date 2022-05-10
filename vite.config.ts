@@ -69,7 +69,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       // frame 模式 需要与 nginx 的端口一致，避免无限刷新
       hmr: VITE_USE_FRAME
         ? {
-            port: VITE_FRAME_NGINX_PORT,
+            clientPort: VITE_FRAME_NGINX_PORT,
           }
         : {},
     },
