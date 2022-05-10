@@ -3,15 +3,15 @@
     <!-- 左侧 -->
     <div :class="`${prefixCls}-left-wrap`" class="w-full">
       <Summary :loading="loadiyg" class="enter-y" />
-      <div class="w-full flex space-x-4">
+      <div class="w-full flex <md:flex-wrap space-x-4">
         <!--  -->
-        <div class="!w-3/4"
+        <div class="!md:w-3/4 <md:w-full"
           ><Utils :loading="loading" class="enter-y !mt-4 w-full" />
           <div class="md:flex md:mt-4 enter-y" :class="`${prefixCls}-todo`">
             <Todo :loading="loading" class="!<md:mt-4 !md:mr-4 md:w-1/2" />
             <WarnNotice :loading="loading" class="!<md:mt-4 md:w-1/2" /> </div
         ></div>
-        <div class="!w-1/4 space-y-4 mt-4">
+        <div class="!md:w-1/4 <md:w-full space-y-4 mt-4">
           <ExchangeRate :loading="loading" class="!md:mt-0 !<md:mt-4 basis-1/2" />
           <Announce :loading="loading" class="!flex-grow" />
         </div>

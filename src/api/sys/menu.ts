@@ -1,7 +1,7 @@
 import { defHttp } from '/@/utils/http/axios';
 import { template } from 'lodash-es';
 import { BasicResponse } from '/@/api/model/baseModel';
-import { MenuVo, Menu } from '/@/api/sys/model/menuModel';
+import { MenuVo, Menu, RouteItem } from '/@/api/sys/model/menuModel';
 
 /**
  * 校验是否远程地址
@@ -99,7 +99,7 @@ export const forMenu = (menuList: Menu[], proxyPrefixPath: string) => {
         redirect: join('/'),
         meta,
         children: _c,
-      } as { [prop: string]: any };
+      } as RouteItem;
       // 组件名称
       if (component) {
         opt.component = component;
@@ -123,9 +123,7 @@ export const forMenu = (menuList: Menu[], proxyPrefixPath: string) => {
         }
         meta.frameSrc = isNetWork ? url : `${proxyPrefixPath}${currentPaths.join('/')}`;
       }
-      const opt = { path, name, meta } as {
-        [prop: string]: any;
-      };
+      const opt = { path, name, meta } as RouteItem;
       if (component) {
         opt.component = component;
       }
