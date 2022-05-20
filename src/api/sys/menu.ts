@@ -78,12 +78,18 @@ export const forMenu = (menuList: Menu[], proxyPrefixPath: string) => {
     const currentPaths = [...prefixPaths, url];
 
     // 避免重复，取层级的
-    const name = currentPaths.map((item) => item.replace(/^\//, '')).join('.');
+    const name = currentPaths.map((item) => item.replace(/^\//, '').replace(/\//g, '.')).join('.');
     /**
      * menuType = M 为目录
      */
+
     if (menuType === 'M') {
-      const _c = children.map((item) => handle(item, tierNum + 1, currentPaths)).filter(Boolean);
+      const _c = children
+        .reduce((prev, item) => {
+          const arr = handle(item, tierNum + 1, currentPaths);
+          return [...prev, ...(Array.isArray(arr) ? arr : [arr])];
+        }, [])
+        .filter(Boolean);
       const redirectPaths = makeRedirectPaths(_c, currentPaths);
       const join = (separator: string) => redirectPaths.join(separator);
       const meta = {
@@ -106,6 +112,7 @@ export const forMenu = (menuList: Menu[], proxyPrefixPath: string) => {
       }
       return opt;
     } else {
+      const ret = [] as RouteItem[];
       // 存在重复路由不嵌套处理
       const isNetWork = isNetWorkUrl(url);
       // 存在 query 参数(?x=1&y=2) 的  转义
@@ -127,7 +134,30 @@ export const forMenu = (menuList: Menu[], proxyPrefixPath: string) => {
       if (component) {
         opt.component = component;
       }
-      return opt;
+      ret.push(opt);
+      /**
+       * 存在编辑，查看页面，不在菜单显示
+       */
+      if (children.length) {
+        ret.push(
+          ...children.reduce((prev, item) => {
+            item.url = `${path}/${item.url}`;
+            return [
+              ...prev,
+              ...(
+                handle(
+                  item,
+                  tierNum,
+                  currentPaths.filter((item) => item !== path),
+                ) as RouteItem[]
+              ).map((item) => {
+                return { ...item, meta: { ...item.meta, hideMenu: true } };
+              }),
+            ];
+          }, []),
+        );
+      }
+      return ret;
     }
   }
 
