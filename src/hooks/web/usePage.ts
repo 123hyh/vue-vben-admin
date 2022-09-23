@@ -46,6 +46,7 @@ export const useRedo = (_router?: Router) => {
         resolve(false);
         return;
       }
+      // 解决 动态路由 path 丢失 问题
       if (name && Object.keys(params).length > 0 && false) {
         params['_redirect_type'] = 'name';
         params['path'] = String(name);
