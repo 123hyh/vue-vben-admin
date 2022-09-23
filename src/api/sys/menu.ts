@@ -151,7 +151,10 @@ export const forMenu = (menuList: Menu[], proxyPrefixPath: string) => {
                   currentPaths.filter((item) => item !== path),
                 ) as RouteItem[]
               ).map((item) => {
-                return { ...item, meta: { ...item.meta, hideMenu: true } };
+                return {
+                  ...item,
+                  meta: { ...item.meta, hideMenu: true, currentActiveMenu: currentPaths.join('/') },
+                };
               }),
             ];
           }, []),

@@ -134,5 +134,8 @@
     "sider",
     "pnpm",
     "antd"
-  ]
+  ],
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  }
 }

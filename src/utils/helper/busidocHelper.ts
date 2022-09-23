@@ -10,12 +10,30 @@ export function busidocTableSchema2BasicColumn(list: SysBusidocTableSchema[]) {
   const handle = (list: SysBusidocTableSchema[]) => {
     return list.map<BasicColumn>((item) => {
       const column = {} as BasicColumn;
-      const { field, children = [], cnLabel, sortable, ditOptions, align, visible } = item;
+      const {
+        field,
+        children = [],
+        cnLabel,
+        sortable,
+        ditOptions,
+        align,
+        visible,
+        format,
+        fixed,
+        width,
+      } = item;
       column.dataIndex = field;
       column.title = cnLabel;
       column.sorter = sortable === 1;
       column.align = align;
       column.ifShow = visible === 1;
+      column.format = format;
+      // @ts-ignore
+      column.fixed = fixed;
+      if (width) {
+        column.width = width;
+      }
+      column.align = align;
 
       /**
        * 超过宽度将自动省略，暂不支持和排序筛选一起使用。
