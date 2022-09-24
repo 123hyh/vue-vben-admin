@@ -323,6 +323,7 @@ export function useDataSource(
       });
       return resultItems;
     } catch (error) {
+      console.error(error);
       emit('fetch-error', error);
       dataSourceRef.value = [];
       setPagination({
