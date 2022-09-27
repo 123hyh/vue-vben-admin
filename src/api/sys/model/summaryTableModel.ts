@@ -190,4 +190,18 @@ export interface SummaryTableModel {
    * 列配置
    */
   columns: SysSummaryTableSchemaModel[];
+
+  /**
+   * 当前用户信息
+   */
+  user: {
+    /**
+     * 用户id
+     */
+    userId: string;
+    /**
+     * 用户当前组织id
+     */
+    orgId: string;
+  };
 }

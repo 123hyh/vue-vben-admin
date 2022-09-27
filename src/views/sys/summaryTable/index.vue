@@ -75,9 +75,9 @@
 
         if (res !== undefined) {
           const { data } = res;
-          const { columns = [], searchs = [], dataSourceId, currentUserOrgId } = data;
-          // 赋值当前用户的 orgid
-          query.orgId = currentUserOrgId;
+          const { columns = [], searchs = [], dataSourceId, user = {} } = data;
+          // 赋值当前用户的 信息
+          Object.assign(query, user);
           dataSourceIdTop = dataSourceId;
           searchsTop = searchs;
 
