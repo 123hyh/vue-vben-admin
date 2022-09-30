@@ -18,9 +18,12 @@ export function busidocTableSchema2BasicColumn(list: SysBusidocTableSchema[]) {
         ditOptions,
         align,
         visible,
+        // @ts-ignore
         format,
         fixed,
         width,
+        // @ts-ignore
+        slots,
       } = item;
       column.dataIndex = field;
       column.title = cnLabel;
@@ -34,6 +37,12 @@ export function busidocTableSchema2BasicColumn(list: SysBusidocTableSchema[]) {
         column.width = width;
       }
       column.align = align;
+      // 自定义插槽
+      try {
+        column.slots = JSON.parse(slots);
+      } catch (e) {
+        console.log(e);
+      }
 
       /**
        * 超过宽度将自动省略，暂不支持和排序筛选一起使用。

@@ -21,11 +21,13 @@
   import { thousands } from '/@/utils/numberUtils';
   import { useComponentRegister } from '/@/components/Form';
   import NumberRangeFormItem from './NumberRangeFormItem.vue';
+  import CopySlot from './copySlot.vue';
   export default defineComponent({
     name: 'SysSummaryTable',
     components: {
       BasicTable,
       ExportExcelButton,
+      CopySlot,
     },
     setup: () => {
       useComponentRegister('NumberRange', NumberRangeFormItem);
@@ -232,14 +234,14 @@
               nd[citem.field] = dictMapByType[citem.dict][nd[citem.field]];
             });
 
-            // 2、decimal 处理()
-            if (!isDownExcel) {
-              const decimalColumns = get(columnByValueType, 'decimal') ?? [];
-              decimalColumns.forEach((citem) => {
-                nd[citem.field] = thousands(nd[citem.field]);
-              });
-            }
+            const decimalColumns = get(columnByValueType, 'decimal') ?? [];
 
+            // 2、decimal 处理()
+            decimalColumns.forEach((citem) => {
+              const v = nd[citem.field];
+              // 下载excel 时 转回数字类型；避免excel 无法统计
+              nd[citem.field] = !isDownExcel ? thousands(v) : +v;
+            });
             return nd;
           });
         };
@@ -256,6 +258,9 @@
 <template>
   <div :class="`${prefixCls} w-full box-border`">
     <BasicTable @register="registerTable">
+      <template #copy="{ text }">
+        <CopySlot :value="text" />
+      </template>
       <template #toolbar>
         <ExportExcelButton @register="registerExportTable" />
       </template>
