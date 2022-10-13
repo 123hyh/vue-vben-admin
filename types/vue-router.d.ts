@@ -41,5 +41,7 @@ declare module 'vue-router' {
     ignoreRoute?: boolean;
     // Hide path for children
     hidePathForChildren?: boolean;
+    // 动态组件名称
+    dynamicNameFlag?: boolean;
   }
 }

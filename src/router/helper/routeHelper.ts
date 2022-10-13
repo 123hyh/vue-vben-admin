@@ -5,7 +5,7 @@ import { getParentLayout, LAYOUT, EXCEPTION_COMPONENT } from '/@/router/constant
 import { cloneDeep, omit } from 'lodash-es';
 import { warn } from '/@/utils/log';
 import { createRouter, createWebHashHistory } from 'vue-router';
-
+import { createCustomNameComponent } from '/@/components/CreateCustomNameComponent';
 export type LayoutMapKey = 'LAYOUT';
 const IFRAME = () => import('/@/views/sys/iframe/FrameBlank.vue');
 
@@ -31,7 +31,10 @@ function asyncImportRoute(routes: AppRouteRecordRaw[] | undefined) {
       if (layoutFound) {
         item.component = layoutFound;
       } else {
-        item.component = dynamicImport(dynamicViewsModules, component as string);
+        const dynamicCom = dynamicImport(dynamicViewsModules, component as string);
+        item.component = item.meta.dynamicNameFlag
+          ? createCustomNameComponent(item.name, dynamicCom)
+          : dynamicCom;
       }
     } else if (name) {
       item.component = getParentLayout();

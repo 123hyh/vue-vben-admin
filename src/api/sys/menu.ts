@@ -1,7 +1,7 @@
 import { defHttp } from '/@/utils/http/axios';
 import { template } from 'lodash-es';
 import { BasicResponse } from '/@/api/model/baseModel';
-import { MenuVo, Menu, RouteItem } from '/@/api/sys/model/menuModel';
+import { MenuVo, Menu, RouteItem, SysMenuParams } from '/@/api/sys/model/menuModel';
 import { getProfileRoute } from '/@/router/routes';
 /**
  * 校验是否远程地址
@@ -71,14 +71,22 @@ export const forMenu = (menuList: Menu[], proxyPrefixPath: string) => {
     return _handle(children, [...prefixPaths]);
   };
 
-  function handle(menuItem: any, tierNum: number, prefixPaths = [] as string[]) {
-    const { menuType, menuName, url, children = [], isIframe = 0, component } = menuItem;
+  function handle(menuItem: Menu, tierNum: number, prefixPaths = [] as string[]) {
+    let { component } = menuItem;
+    const {
+      menuType,
+      menuName,
+      url,
+      isIframe = 0,
+      sysMenuParams = {} as SysMenuParams,
+      children = [],
+    } = menuItem as Menu & { children: Menu[] };
 
     // 当前路由的路径集合
     const currentPaths = [...prefixPaths, url];
 
     // 避免重复，取层级的
-    const name = currentPaths.map((item) => item.replace(/^\//, '').replace(/\//g, '.')).join('.');
+    let name = currentPaths.map((item) => item.replace(/^\//, '').replace(/\//g, '.')).join('.');
     /**
      * menuType = M 为目录
      */
@@ -129,6 +137,11 @@ export const forMenu = (menuList: Menu[], proxyPrefixPath: string) => {
           path = 'data';
         }
         meta.frameSrc = isNetWork ? url : `${proxyPrefixPath}${currentPaths.join('/')}`;
+      } else {
+        const { name: sName, component: sCom, dynamicNameFlag = 0 } = sysMenuParams;
+        name = sName ?? name;
+        component = sCom ?? component;
+        meta.dynamicNameFlag = dynamicNameFlag === 1;
       }
       const opt = { path, name, meta } as RouteItem;
       if (component) {

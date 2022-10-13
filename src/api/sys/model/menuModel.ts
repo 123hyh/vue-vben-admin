@@ -15,7 +15,38 @@ export interface RouteItem {
  */
 export type getMenuListResultModel = RouteItem[];
 
-export type Menu = {
+/**
+ * 路由参数
+ */
+export type SysMenuParams = {
+  id: number;
+  /**
+   * 菜单id
+   */
+  menuId: number;
+
+  /**
+   * 路由名称
+   */
+  name: string;
+
+  /**
+   * 路由 url 参数
+   */
+  queryParams: string;
+
+  /**
+   * 前端组件路径
+   */
+  component: string;
+
+  /**
+   * 动态 name
+   */
+  dynamicNameFlag: 0 | 1;
+};
+
+export interface Menu {
   /** 菜单ID */
   menuId: number;
 
@@ -34,8 +65,8 @@ export type Menu = {
   /** 菜单URL */
   url: string;
 
-  /** 类型:0目录,1菜单,2按钮 */
-  menuType: 0 | 1 | 2;
+  /** 类型: M=目录，C=菜单，F = 权限码 */
+  menuType: 'M' | 'C' | 'F';
 
   /** 菜单状态:0显示,1隐藏 */
   visible: 0 | 1;
@@ -57,7 +88,10 @@ export type Menu = {
 
   /** 前端组件路径 **/
   component: string;
-};
+
+  /** 前端路由参数 **/
+  sysMenuParams: SysMenuParams;
+}
 
 /**
  * 菜单 vo
