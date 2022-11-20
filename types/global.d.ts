@@ -17,9 +17,11 @@ declare global {
     };
     lastBuildTime: string;
   };
-  const $: {
-    [prop: string]: any;
-  };
+  interface Window {
+    $: {
+      [prop: string]: any;
+    };
+  }
   // declare interface Window {
   //   // Global vue app instance
   //   __APP__: App<Element>;

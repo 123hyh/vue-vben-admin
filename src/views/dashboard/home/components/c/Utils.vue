@@ -103,15 +103,14 @@
   }
   const permStore = usePermissionStoreWithOut();
 
-  function getPath(url) {
+  function getPath(menuId: number) {
     let result: string | null = null;
     const find = (list) => {
       list.forEach((item) => {
         const { path, children, meta } = item;
         if (children) {
           find(children);
-        } else if (meta?.frameSrc && meta.frameSrc?.endsWith(url)) {
-          // 旧菜单 iframe的处理
+        } else if (meta.menuId === menuId) {
           result = path;
         }
       });
@@ -121,8 +120,9 @@
   }
   const { push: routerPush } = useRouter();
 
-  function goPage({ url }: { url: string }) {
-    const path = getPath(url);
+  function goPage(item) {
+    const { menuId } = item as { url: string; menuId: number };
+    const path = getPath(menuId);
     if (path == null) {
       return;
     }

@@ -72,7 +72,7 @@ export const forMenu = (menuList: Menu[], proxyPrefixPath: string) => {
   };
 
   function handle(menuItem: any, tierNum: number, prefixPaths = [] as string[]) {
-    const { menuType, menuName, url, children = [], isIframe = 0, component } = menuItem;
+    const { menuType, menuName, url, children = [], isIframe = 0, component, menuId } = menuItem;
 
     // 当前路由的路径集合
     const currentPaths = [...prefixPaths, url];
@@ -118,7 +118,7 @@ export const forMenu = (menuList: Menu[], proxyPrefixPath: string) => {
       // 存在 query 参数(?x=1&y=2) 的  转义
       let path = hasUrlParams(url) ? encodeURIComponent(url) : url;
 
-      const meta = { title: menuName } as any;
+      const meta = { title: menuName, menuId } as any;
 
       if (isIframe === 1) {
         // 前缀为 http开头的定义为外链接(不允许直接open窗口)
