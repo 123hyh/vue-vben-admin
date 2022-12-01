@@ -21,6 +21,7 @@ declare global {
     $: {
       [prop: string]: any;
     };
+    createMenuItem: (url: string, title: string) => void;
   }
   // declare interface Window {
   //   // Global vue app instance
