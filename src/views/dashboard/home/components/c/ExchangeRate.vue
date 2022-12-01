@@ -36,8 +36,6 @@
 </template>
 
 <script lang="ts" setup name="ExchangeRate">
-  import { useService } from '/@/utils';
-
   type Rate = { label: string; value1: string; value2: string };
   import { useDesign } from '/@/hooks/web/useDesign';
   const { prefixCls } = useDesign('home-exrate');
@@ -46,7 +44,7 @@
   import { onMounted, ref } from 'vue';
   import { useGlobSetting } from '/@/hooks/setting';
   import { formatToDate } from '/@/utils/dateUtil';
-  import { getBocRateList } from '/@/api/bas/exchangeRate';
+  import { getBocRateList, getExchangeRateList } from '/@/api/bas/exchangeRate';
   import dayjs from 'dayjs';
 
   defineProps({
@@ -74,19 +72,40 @@
   }
 
   async function getBocRatePage() {
-    const [res] = await useService(() => {
-      return getBocRateList({
-        orderDate: formatToDate(dayjs()),
-        exchRateType: 'NIN',
-      });
-    });
-    if (res !== undefined) {
-      const { rows = [] } = res;
-      rates.value = rows.map((item) => ({
-        label: item.currencyName,
-        value1: item.rateSellingPriceRound,
-        value2: '-',
-      }));
+    const curDate = new Date();
+    const p = () =>
+      Promise.allSettled([
+        getBocRateList({
+          orderDate: formatToDate(dayjs()),
+          exchRateType: 'NIN',
+        }),
+        getExchangeRateList({
+          exchCurrency: 'CNY',
+          exchangerateYear: curDate.getFullYear(),
+          exchangerateMonth: curDate.getMonth() + 1,
+        }),
+      ]);
+    const res = await p();
+    if (res) {
+      const [bocRateListRes, exchangeRateListRes] = res;
+      let exchangeRateList = {};
+      // 汇率
+      if (exchangeRateListRes.status === 'fulfilled') {
+        const { rows } = exchangeRateListRes.value;
+        exchangeRateList = rows.reduce((prev, item) => {
+          prev[item.currencyName] = item;
+          return prev;
+        }, {});
+      }
+      // 中银
+      if (bocRateListRes.status === 'fulfilled') {
+        const { rows } = bocRateListRes.value;
+        rates.value = rows.map((item) => ({
+          label: item.currencyName,
+          value1: item.rateSellingPriceRound,
+          value2: exchangeRateList[item.currencyName]?.customsRate ?? '-',
+        }));
+      }
     }
   }
   onMounted(() => {
