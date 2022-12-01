@@ -8,8 +8,8 @@
       <div class="table-row-group" style="font-size: 14px">
         <div class="table-row">
           <div class="table-cell p-1"></div>
-          <div class="table-cell p-1">海关汇率</div>
           <div class="table-cell p-1">中银汇率</div>
+          <div class="table-cell p-1">海关汇率</div>
         </div>
         <template v-for="(row, index) in rates" :key="row.label + index">
           <div class="table-row">
@@ -35,14 +35,19 @@
   </Card>
 </template>
 
-<script lang="ts" setup>
-  type Rate = { label: string; value: string };
+<script lang="ts" setup name="ExchangeRate">
+  import { useService } from '/@/utils';
+
+  type Rate = { label: string; value1: string; value2: string };
   import { useDesign } from '/@/hooks/web/useDesign';
   const { prefixCls } = useDesign('home-exrate');
   import { Card } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
-  import { ref } from 'vue';
+  import { onMounted, ref } from 'vue';
   import { useGlobSetting } from '/@/hooks/setting';
+  import { formatToDate } from '/@/utils/dateUtil';
+  import { getBocRateList } from '/@/api/bas/exchangeRate';
+  import dayjs from 'dayjs';
 
   defineProps({
     loading: {
@@ -62,37 +67,31 @@
   /**
    * 中银
    */
-  const rates = ref([
-    {
-      label: '美元',
-      value1: '6.3463',
-      value2: '6.3463',
-    },
-    {
-      label: '港币',
-      value1: '0.8463',
-      value2: '0.8463',
-    },
-    {
-      label: '英镑',
-      value1: '8.5963',
-      value2: '8.5963',
-    },
-    {
-      label: '日元',
-      value1: '0.059213',
-      value2: '0.059213',
-    },
-    {
-      label: '欧元',
-      value1: '7.2074',
-      value2: '7.2074',
-    },
-  ] as Rate[]);
+  const rates = ref([] as Rate[]);
 
   function goLorem() {
     push('/bas/exchangerate');
   }
+
+  async function getBocRatePage() {
+    const [res] = await useService(() => {
+      return getBocRateList({
+        orderDate: formatToDate(dayjs()),
+        exchRateType: 'NIN',
+      });
+    });
+    if (res !== undefined) {
+      const { rows = [] } = res;
+      rates.value = rows.map((item) => ({
+        label: item.currencyName,
+        value1: item.rateSellingPriceRound,
+        value2: '-',
+      }));
+    }
+  }
+  onMounted(() => {
+    getBocRatePage();
+  });
 </script>
 
 <style lang="less" scoped></style>
