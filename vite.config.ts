@@ -32,7 +32,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     VITE_PUBLIC_PATH,
     VITE_PROXY,
     VITE_DROP_CONSOLE,
-    VITE_USE_FRAME,
+    VITE_USE_FRAME, // 是否使用 iframe（嵌入中台页面,仅在开发环境使用）
     VITE_FRAME_NGINX_PORT,
   } = viteEnv;
 
