@@ -9,9 +9,10 @@
   "scripts": {
     "bootstrap": "pnpm install",
     "serve": "npm run dev",
-    "dev:frame": "vite --mode frameDev",
+    "dev:frame": "vite --mode frame_dev",
     "dev": "vite",
     "build": "cross-env NODE_ENV=production vite build && esno ./build/script/postBuild.ts",
+    "build:frame_production": "cross-env NODE_ENV=production vite build --mode frame_production && esno ./build/script/postBuild.ts",
     "build:test": "cross-env vite build --mode test && esno ./build/script/postBuild.ts",
     "build:no-cache": "pnpm clean:cache && npm run build",
     "report": "cross-env REPORT=true npm run build",
