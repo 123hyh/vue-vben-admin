@@ -81,6 +81,9 @@ export const useUserStore = defineStore({
     getOrgList(): any[] {
       return this.orgList ?? [];
     },
+    getUserId(): string {
+      return <string>this.userInfo?.userId;
+    },
   },
   actions: {
     setToken(info: string | undefined) {
@@ -117,6 +120,7 @@ export const useUserStore = defineStore({
       try {
         const { goHome = true, mode, ...loginParams } = params;
         const { msg: salt } = await preLogin(params.username);
+        // @ts-ignore
         const { data } = await loginApi(
           {
             ...loginParams,

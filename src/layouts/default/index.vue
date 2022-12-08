@@ -29,6 +29,10 @@
   import { useLockPage } from '/@/hooks/web/useLockPage';
 
   import { useAppInject } from '/@/hooks/web/useAppInject';
+  import useNotification from '/@/hooks/web/useNotification';
+  import { useUserStore } from '/@/store/modules/user';
+  import { isEmpty } from '/@/utils/is';
+  import { useGlobSetting } from '/@/hooks/setting';
 
   export default defineComponent({
     name: 'DefaultLayout',
@@ -58,6 +62,12 @@
         return cls;
       });
 
+      // 开启通知
+      const { getUserId } = useUserStore();
+      const { apiUrl } = useGlobSetting();
+      if (!isEmpty(getUserId)) {
+        useNotification(`ws://${location.host}${apiUrl}/notification/${getUserId}`);
+      }
       return {
         getShowFullHeaderRef,
         getShowSidebar,
