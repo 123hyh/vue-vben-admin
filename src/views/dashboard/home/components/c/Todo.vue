@@ -33,16 +33,18 @@
   import { Card } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
   import { ref, onMounted, computed } from 'vue';
-  import { getTodoList } from '/@/api/process/index.ts';
+  import { getTodoList } from '/@/api/process/index';
   import { useService } from '/@/utils';
   import dayjs from 'dayjs';
   import { useGlobSetting } from '/@/hooks/setting';
-  defineProps({
+  import { noticeEmitter } from '/@/hooks/web/useNotification';
+  const props = defineProps({
     loading: {
       type: Boolean,
     },
   });
   let list = ref([]);
+  const isLoading = ref(props.loading);
   const { push } = useRouter();
   function goLorem() {
     push('/org/process/todo');
@@ -55,13 +57,22 @@
     window.$.modal.openFullS(item.itemName, a.href);
   }
   const getList = async () => {
+    isLoading.value = true;
     const [res] = await useService(() => getTodoList({ pageSize: 10, pageNum: 1 }));
     if (res) {
       list.value = res.rows;
     }
+    isLoading.value = false;
   };
+  noticeEmitter;
   const formatDate = computed(() => (time: string) => dayjs(time).format('YYYY-MM-DD'));
-  onMounted(getList);
+  onMounted(() => {
+    getList();
+  });
+
+  noticeEmitter.on('on-receive-data', (_e) => {
+    getList();
+  });
 </script>
 
 <style scoped lang="less">

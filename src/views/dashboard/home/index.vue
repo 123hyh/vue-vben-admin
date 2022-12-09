@@ -46,7 +46,6 @@
     setup() {
       const loading = ref(true);
       const { prefixCls } = useDesign('home-page');
-
       setTimeout(() => {
         loading.value = false;
       }, 1500);

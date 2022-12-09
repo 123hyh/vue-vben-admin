@@ -5,12 +5,21 @@ import { Button, notification } from 'ant-design-vue';
 import { isEmpty } from 'lodash-es';
 import { useGlobSetting } from '/@/hooks/setting';
 import { FieldTimeOutlined } from '@ant-design/icons-vue';
+import mitt from '/@/utils/mitt';
 
 const closeNotification = (key: string) => {
   notification.close(key);
 };
 
-const openNotification = (vo: NotificationModel) => {
+/**
+ *
+ * @param vo
+ * @param receiveFn 接收信息回调
+ */
+const openNotification = (vo: NotificationModel, receiveFn: (vo: NotificationModel) => void) => {
+  if (isEmpty(vo)) {
+    return receiveFn(vo);
+  }
   const { apiUrl } = useGlobSetting();
   const key = `open${vo.traceId}`;
   notification.open({
@@ -54,13 +63,15 @@ const openNotification = (vo: NotificationModel) => {
       console.log('关闭了');
     },
   });
+  receiveFn(vo);
 };
 
 /**
  * 通知
  * @param serverUrl 服务地址
+ * @param receiveFn 接收消息回调
  */
-export default function useNotification(serverUrl: string) {
+export default function useNotification(serverUrl: string, receiveFn) {
   const { data, close, open } = useWebSocket(serverUrl, {
     autoReconnect: true,
     heartbeat: true,
@@ -69,14 +80,14 @@ export default function useNotification(serverUrl: string) {
   // 监听响应值
   watchEffect(() => {
     if (!isEmpty(data.value)) {
+      let res;
       try {
-        const res = JSON.parse(data.value) as NotificationModel;
-        console.log(res);
-        openNotification(res);
-        debugger;
+        res = JSON.parse(data.value) as NotificationModel;
       } catch (error) {
         console.log(`出现错误了：${error}`);
       }
+      // @ts-ignore
+      openNotification(res, receiveFn);
     }
   });
 
@@ -89,3 +100,5 @@ export default function useNotification(serverUrl: string) {
     close();
   });
 }
+
+export const noticeEmitter = mitt();
