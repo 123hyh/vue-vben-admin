@@ -21,6 +21,10 @@ declare global {
     $: {
       [prop: string]: any;
     };
+    layer: {
+      [prop: string]: any;
+    };
+
     createMenuItem: (url: string, title: string) => void;
   }
   // declare interface Window {

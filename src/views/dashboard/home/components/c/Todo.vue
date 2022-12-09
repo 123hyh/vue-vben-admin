@@ -29,12 +29,14 @@
 <script lang="ts" setup>
   import { useDesign } from '/@/hooks/web/useDesign';
   const { prefixCls } = useDesign('home-todo');
+  const { apiUrl } = useGlobSetting();
   import { Card } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
   import { ref, onMounted, computed } from 'vue';
   import { getTodoList } from '/@/api/process/index.ts';
   import { useService } from '/@/utils';
   import dayjs from 'dayjs';
+  import { useGlobSetting } from '/@/hooks/setting';
   defineProps({
     loading: {
       type: Boolean,
@@ -46,7 +48,11 @@
     push('/org/process/todo');
   }
   function goTodo(item) {
-    window.$.modal.openFullS(item.itemName, `/basic-api/${item.formUrl}`);
+    const index = window.layer.index + 1;
+    const a = document.createElement('a');
+    a.href = `${apiUrl}/${item.formUrl}`;
+    a.search += `&layerIndex=${index}`;
+    window.$.modal.openFullS(item.itemName, a.href);
   }
   const getList = async () => {
     const [res] = await useService(() => getTodoList({ pageSize: 10, pageNum: 1 }));
