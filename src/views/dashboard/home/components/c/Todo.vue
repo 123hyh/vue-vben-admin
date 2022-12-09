@@ -46,7 +46,7 @@
     push('/org/process/todo');
   }
   function goTodo(item) {
-    $.modal.openFull(item.itemName, `/basic-api/${item.formUrl}`);
+    window.$.modal.openFullS(item.itemName, `/basic-api/${item.formUrl}`);
   }
   const getList = async () => {
     const [res] = await useService(() => getTodoList({ pageSize: 10, pageNum: 1 }));
