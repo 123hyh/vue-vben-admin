@@ -33,7 +33,7 @@
   import { Card } from 'ant-design-vue';
   import { useRouter } from 'vue-router';
   import { ref, onMounted, computed } from 'vue';
-  import { getTodoList } from '/@/api/process/index';
+  import { getIndexTodoList } from '/@/api/process';
   import { useService } from '/@/utils';
   import dayjs from 'dayjs';
   import { useGlobSetting } from '/@/hooks/setting';
@@ -58,7 +58,7 @@
   }
   const getList = async () => {
     isLoading.value = true;
-    const [res] = await useService(() => getTodoList({ pageSize: 10, pageNum: 1 }));
+    const [res] = await useService(() => getIndexTodoList({ pageSize: 10, pageNum: 1 }));
     if (res) {
       list.value = res.rows;
     }
