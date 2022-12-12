@@ -27,4 +27,8 @@ export interface NotificationModel {
    * 提交人名称
    */
   submitByName: string;
+  /**
+   * 通知类型
+   */
+  noticeType: 'BUSINESS' | 'WORK_FLOW';
 }

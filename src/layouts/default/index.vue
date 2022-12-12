@@ -67,6 +67,7 @@
 
       if (!isEmpty(getUserId)) {
         useNotification(`ws://${location.host}${apiUrl}/notification/${getUserId}`, (e) => {
+          debugger;
           noticeEmitter.emit('on-receive-data', e);
         });
       }

@@ -26,7 +26,7 @@
   </Card>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="Todo">
   import { useDesign } from '/@/hooks/web/useDesign';
   const { prefixCls } = useDesign('home-todo');
   const { apiUrl } = useGlobSetting();
@@ -60,7 +60,16 @@
    * @param item
    */
   function goTodo(item) {
-    const { id, taskId, nodeName, module, todoUserId, isAdd, taskName: pageName } = item;
+    const {
+      id,
+      taskId,
+      nodeName,
+      module,
+      todoUserId,
+      isAdd = 0,
+      taskName: pageName,
+      isView = 0,
+    } = item;
     if (isEmpty(taskId)) {
       // 业务单据待办
       const index = window.layer.index + 1;
@@ -70,13 +79,13 @@
       window.$.modal.openFullS(item.itemName, a.href);
     } else {
       // 审批流待办
-      if (todoUserId !== userId) {
+      if (userId !== '1' && todoUserId !== userId) {
         return createMessage.error('不允许非待办人办理待办事项');
       }
       const prefix = `${apiUrl}/process/todoitem`;
       window.$.modal.openFull(
         nodeName,
-        `${prefix}/showVerifyDialog/${taskId}/${id}?module=${module}&pageName=${pageName}&isAdd=${isAdd}`,
+        `${prefix}/showVerifyDialog/${taskId}/${id}?module=${module}&pageName=${pageName}&isAdd=${isAdd}&&isView=${isView}`,
         null,
         null,
         null,
@@ -99,6 +108,7 @@
   });
 
   noticeEmitter.on('on-receive-data', (_e) => {
+    debugger;
     getList();
   });
 </script>

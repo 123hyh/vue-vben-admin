@@ -6,10 +6,30 @@ import { isEmpty } from 'lodash-es';
 import { useGlobSetting } from '/@/hooks/setting';
 import { FieldTimeOutlined } from '@ant-design/icons-vue';
 import mitt from '/@/utils/mitt';
+import { useMessage } from '/@/hooks/web/useMessage';
+
+const { apiUrl } = useGlobSetting();
 
 const closeNotification = (key: string) => {
   notification.close(key);
 };
+const { createMessage } = useMessage();
+function goTodoDetail(key: string, vo: NotificationModel) {
+  closeNotification(key);
+  const url = apiUrl + '/' + vo.redirectUrl;
+  const opts = {
+    BUSINESS: (title, url) => window.$.modal.openFullS(title, url, null, null, 'view'),
+    WORK_FLOW: (title, url) => {
+      return window.$.modal.openFull(title, url, null, null, null, '办理');
+    },
+  };
+  const fn = opts[vo.noticeType];
+  if (fn) {
+    fn(vo.title, url);
+  } else {
+    createMessage.error('请联系管理员对该类型推送跳转进行配置！');
+  }
+}
 
 /**
  *
@@ -20,8 +40,7 @@ const openNotification = (vo: NotificationModel, receiveFn: (vo: NotificationMod
   if (isEmpty(vo)) {
     return receiveFn(vo);
   }
-  const { apiUrl } = useGlobSetting();
-  const key = `open${vo.traceId}`;
+  const key = `__open__${vo.traceId}`;
   notification.open({
     message: vo.title ?? '无标题',
     description: () =>
@@ -50,10 +69,7 @@ const openNotification = (vo: NotificationModel, receiveFn: (vo: NotificationMod
           type: 'primary',
           size: 'small',
           onClick: () => {
-            closeNotification(key);
-            const url = apiUrl + '/' + vo.redirectUrl;
-            // 开启弹窗通知
-            window.$.modal.openFull(vo.title, url, null, null, 'view');
+            goTodoDetail(key, vo);
           },
         },
         { default: () => '去办理' },
