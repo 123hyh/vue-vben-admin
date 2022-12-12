@@ -38,6 +38,9 @@
   import dayjs from 'dayjs';
   import { useGlobSetting } from '/@/hooks/setting';
   import { noticeEmitter } from '/@/hooks/web/useNotification';
+  import { isEmpty } from '/@/utils/is';
+  import { useUserStore } from '/@/store/modules/user';
+  import { useMessage } from '/@/hooks/web/useMessage';
   const props = defineProps({
     loading: {
       type: Boolean,
@@ -49,12 +52,37 @@
   function goLorem() {
     push('/org/process/todo');
   }
+  const { getUserId: userId } = useUserStore();
+  const { createMessage } = useMessage();
+
+  /**
+   * 跳转到待办详情
+   * @param item
+   */
   function goTodo(item) {
-    const index = window.layer.index + 1;
-    const a = document.createElement('a');
-    a.href = `${apiUrl}/${item.formUrl}`;
-    a.search += `&layerIndex=${index}`;
-    window.$.modal.openFullS(item.itemName, a.href);
+    const { id, taskId, nodeName, module, todoUserId, isAdd, taskName: pageName } = item;
+    if (isEmpty(taskId)) {
+      // 业务单据待办
+      const index = window.layer.index + 1;
+      const a = document.createElement('a');
+      a.href = `${apiUrl}/${item.formUrl}`;
+      a.search += `&layerIndex=${index}`;
+      window.$.modal.openFullS(item.itemName, a.href);
+    } else {
+      // 审批流待办
+      if (todoUserId !== userId) {
+        return createMessage.error('不允许非待办人办理待办事项');
+      }
+      const prefix = `${apiUrl}/process/todoitem`;
+      window.$.modal.openFull(
+        nodeName,
+        `${prefix}/showVerifyDialog/${taskId}/${id}?module=${module}&pageName=${pageName}&isAdd=${isAdd}`,
+        null,
+        null,
+        null,
+        '办理',
+      );
+    }
   }
   const getList = async () => {
     isLoading.value = true;

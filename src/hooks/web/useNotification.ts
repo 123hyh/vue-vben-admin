@@ -101,4 +101,7 @@ export default function useNotification(serverUrl: string, receiveFn) {
   });
 }
 
+/**
+ * notice 事件订阅器
+ */
 export const noticeEmitter = mitt();
