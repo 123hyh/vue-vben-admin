@@ -2,7 +2,7 @@
   <div :class="`${prefixCls}`" class="p-4 md:flex w-full md:space-x-4">
     <!-- 左侧 -->
     <div :class="`${prefixCls}-left-wrap`" class="w-full">
-      <Summary :loading="loadiyg" class="enter-y" />
+      <Summary :loading="loading" class="enter-y" />
       <div class="w-full flex <md:flex-wrap space-x-4">
         <!--  -->
         <div class="!md:w-3/4 <md:w-full"

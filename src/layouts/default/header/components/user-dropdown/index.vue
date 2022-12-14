@@ -1,7 +1,11 @@
 <template>
   <Dropdown placement="bottomLeft" :overlayClassName="`${prefixCls}-dropdown-overlay`">
     <span :class="[prefixCls, `${prefixCls}--${theme}`]" class="flex">
-      <img :class="`${prefixCls}__header`" :src="getUserInfo.avatar" />
+      <img
+        :class="`${prefixCls}__header`"
+        :src="apiUrl + '/profile/avatar/' + getUserInfo.avatar"
+        onerror="this.src = 'https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640'"
+      />
       <span :class="`${prefixCls}__info hidden md:block`">
         <span :class="`${prefixCls}__name  `" class="truncate">
           {{ getUserInfo.realName }}
@@ -53,6 +57,7 @@
 
   import { useRouter } from 'vue-router';
   import { getProfileRoute } from '/@/router/routes';
+  import { useGlobSetting } from '/@/hooks/setting';
 
   type MenuEvent = 'logout' | 'personCenter' | 'lock';
 
@@ -73,6 +78,7 @@
       const { t } = useI18n();
       const { getShowDoc, getUseLockPage } = useHeaderSetting();
       const userStore = useUserStore();
+      const { apiUrl } = useGlobSetting();
 
       const getUserInfo = computed(() => {
         const { realName = '', avatar, desc } = userStore.getUserInfo || {};
@@ -119,6 +125,7 @@
         getShowDoc,
         register,
         getUseLockPage,
+        apiUrl,
       };
     },
   });

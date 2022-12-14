@@ -101,15 +101,12 @@
     }
     isLoading.value = false;
   };
-  noticeEmitter;
   const formatDate = computed(() => (time: string) => dayjs(time).format('YYYY-MM-DD'));
   onMounted(() => {
     getList();
-  });
-
-  noticeEmitter.on('on-receive-data', (_e) => {
-    debugger;
-    getList();
+    noticeEmitter.on('on-receive-data', (_e) => {
+      getList();
+    });
   });
 </script>
 

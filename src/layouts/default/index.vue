@@ -61,17 +61,15 @@
         }
         return cls;
       });
+
       // 开启通知
       const { getUserId } = useUserStore();
       const { apiUrl } = useGlobSetting();
-
       if (!isEmpty(getUserId)) {
         useNotification(`ws://${location.host}${apiUrl}/notification/${getUserId}`, (e) => {
-          debugger;
           noticeEmitter.emit('on-receive-data', e);
         });
       }
-
       return {
         getShowFullHeaderRef,
         getShowSidebar,

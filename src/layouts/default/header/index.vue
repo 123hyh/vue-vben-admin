@@ -39,9 +39,7 @@
 
       <ErrorAction v-if="getUseErrorHandle" :class="`${prefixCls}-action__item error-action`" />
 
-      <template v-if="false">
-        <Notify v-if="getShowNotice" :class="`${prefixCls}-action__item notify-item`" />
-      </template>
+      <Notify v-if="getShowNotice" :class="`${prefixCls}-action__item notify-item`" />
 
       <FullScreen v-if="getShowFullScreen" :class="`${prefixCls}-action__item fullscreen-item`" />
 

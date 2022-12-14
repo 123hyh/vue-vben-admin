@@ -122,6 +122,7 @@ export function createMessageGuard(router: Router) {
       if (closeMessageOnSwitch) {
         Modal.destroyAll();
         notification.destroy();
+        console.log('关闭所有 modal, notification');
       }
     } catch (error) {
       warn('message guard error:' + error);

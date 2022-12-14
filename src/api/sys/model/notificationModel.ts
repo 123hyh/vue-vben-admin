@@ -1,3 +1,20 @@
+/**
+ * 通知类型枚举
+ */
+export enum NoticeTypeEnum {
+  /**
+   * 业务单据
+   */
+  BUSINESS = 'BUSINESS',
+  /**
+   * 工作流
+   */
+  WORK_FLOW = 'WORK_FLOW',
+  /**
+   * 撤回
+   */
+  RECALL = 'RECALL',
+}
 export interface NotificationModel {
   /**
    * id
@@ -30,5 +47,9 @@ export interface NotificationModel {
   /**
    * 通知类型
    */
-  noticeType: 'BUSINESS' | 'WORK_FLOW';
+  noticeType: 'BUSINESS' | 'WORK_FLOW' | 'RECALL';
+  /**
+   * 通知栏目编码
+   */
+  channelCode: string;
 }

@@ -64,13 +64,13 @@ const setting: ProjectConfig = {
     // theme
     theme: ThemeEnum.LIGHT,
     // Whether to enable the lock screen function
-    useLockPage: true,
+    useLockPage: false,
     // Whether to show the full screen button
     showFullScreen: true,
     // Whether to show the document button
     showDoc: true,
     // Whether to show the notification button
-    showNotice: true,
+    showNotice: false,
     // Whether to display the menu search
     showSearch: true,
   },
@@ -170,7 +170,7 @@ const setting: ProjectConfig = {
   canEmbedIFramePage: true,
 
   // Whether to delete unclosed messages and notify when switching the interface
-  closeMessageOnSwitch: true,
+  closeMessageOnSwitch: false,
 
   // Whether to cancel the http request that has been sent but not responded when switching the interface.
   // If it is enabled, I want to overwrite a single interface. Can be set in a separate interface

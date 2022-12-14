@@ -1,13 +1,12 @@
 import { useWebSocket } from '@vueuse/core';
 import { h, onMounted, onUnmounted, watchEffect } from 'vue';
-import { NotificationModel } from '/@/api/sys/model/notificationModel';
+import { NoticeTypeEnum, NotificationModel } from '/@/api/sys/model/notificationModel';
 import { Button, notification } from 'ant-design-vue';
 import { isEmpty } from 'lodash-es';
 import { useGlobSetting } from '/@/hooks/setting';
 import { FieldTimeOutlined } from '@ant-design/icons-vue';
 import mitt from '/@/utils/mitt';
 import { useMessage } from '/@/hooks/web/useMessage';
-
 const { apiUrl } = useGlobSetting();
 
 const closeNotification = (key: string) => {
@@ -36,50 +35,52 @@ function goTodoDetail(key: string, vo: NotificationModel) {
  * @param vo
  * @param receiveFn 接收信息回调
  */
-const openNotification = (vo: NotificationModel, receiveFn: (vo: NotificationModel) => void) => {
-  if (isEmpty(vo)) {
-    return receiveFn(vo);
-  }
-  const key = `__open__${vo.traceId}`;
-  notification.open({
-    message: vo.title ?? '无标题',
-    description: () =>
-      h('div', [
-        h('div', vo.content ?? '无内容'),
+const openNotification = (vo: NotificationModel) => {
+  const { noticeType, traceId, title, content, submitByName } = vo;
+  if (noticeType === NoticeTypeEnum.RECALL) {
+    // 撤回消息
+    notification.close(traceId);
+  } else {
+    // 推送通知
+    notification.open({
+      message: title ?? '无标题',
+      description: () =>
+        h('div', [
+          h('div', content ?? '无内容'),
+          h(
+            'div',
+            {
+              style: {
+                'margin-top': '10px',
+              },
+            },
+            `提交人：${submitByName ?? '无'}`,
+          ),
+        ]),
+      duration: 0,
+      placement: 'bottomRight',
+      style: {
+        width: '500px',
+      },
+      icon: () => h(FieldTimeOutlined, { style: 'color: #108ee9' }),
+      btn: () =>
         h(
-          'div',
+          Button,
           {
-            style: {
-              'margin-top': '10px',
+            type: 'primary',
+            size: 'small',
+            onClick: () => {
+              goTodoDetail(traceId, vo);
             },
           },
-          `提交人：${vo.submitByName ?? '无'}`,
+          { default: () => '去办理' },
         ),
-      ]),
-    duration: 0,
-    placement: 'bottomRight',
-    style: {
-      width: '500px',
-    },
-    icon: () => h(FieldTimeOutlined, { style: 'color: #108ee9' }),
-    btn: () =>
-      h(
-        Button,
-        {
-          type: 'primary',
-          size: 'small',
-          onClick: () => {
-            goTodoDetail(key, vo);
-          },
-        },
-        { default: () => '去办理' },
-      ),
-    key,
-    onClose: () => {
-      console.log('关闭了');
-    },
-  });
-  receiveFn(vo);
+      key: traceId,
+      onClose: () => {
+        console.log('关闭了');
+      },
+    });
+  }
 };
 
 /**
@@ -102,8 +103,10 @@ export default function useNotification(serverUrl: string, receiveFn) {
       } catch (error) {
         console.log(`出现错误了：${error}`);
       }
-      // @ts-ignore
-      openNotification(res, receiveFn);
+      receiveFn(res);
+      if (isEmpty(res)) {
+        openNotification(res);
+      }
     }
   });
 
